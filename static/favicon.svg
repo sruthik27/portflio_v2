@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Sruthik Issac favicon">
+  <rect width="64" height="64" rx="12" fill="#040710"/>
+  <path d="M12 18h40v4H12zm0 24h40v4H12z" fill="#00d4ff" opacity=".35"/>
+  <path d="M18 18h6v28h-6zm22 0h6v28h-6z" fill="#00d4ff"/>
+  <path d="M28 18h8c7.732 0 14 6.268 14 14s-6.268 14-14 14h-8v-6h8c4.418 0 8-3.582 8-8s-3.582-8-8-8h-8z" fill="#00ff88"/>
+</svg>

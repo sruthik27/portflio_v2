@@ -1,0 +1,384 @@
+/* ══════════════════════════════════════════════════════════════
+   NOC PORTFOLIO — GLOBAL STYLES
+   ══════════════════════════════════════════════════════════════ */
+
+/* ─── Font Imports ─── */
+/* Fonts are loaded in app.html via <link> tags for better performance */
+
+/* ─── Design Tokens ─── */
+@import './variables.css';
+
+/* ─── Reset ─── */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    font-family: var(--font-mono);
+    font-weight: 400;
+    font-size: var(--text-body);
+    color: var(--text-primary);
+    background: var(--void);
+    line-height: 1.6;
+    letter-spacing: 0.02em;
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+/* ─── Scanline Overlay (CRT effect) ─── */
+body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    background: repeating-linear-gradient(0deg,
+            transparent,
+            transparent 2px,
+            rgba(0, 0, 0, 0.03) 2px,
+            rgba(0, 0, 0, 0.03) 4px);
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--void);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border-active);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--border-bright);
+}
+
+/* ─── Selection ─── */
+::selection {
+    background: var(--cyan-glow);
+    color: var(--text-bright);
+}
+
+/* ─── Links ─── */
+a {
+    color: var(--cyan);
+    text-decoration: none;
+    transition: color var(--fast) var(--ease),
+        text-shadow var(--fast) var(--ease);
+}
+
+a:hover {
+    color: var(--text-bright);
+    text-shadow: 0 0 12px var(--cyan);
+}
+
+/* ─── Focus Rings ─── */
+:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--cyan);
+}
+
+/* ─── Skip Link (Accessibility) ─── */
+.skip-link {
+    position: fixed;
+    top: -100px;
+    left: 16px;
+    background: var(--panel);
+    color: var(--cyan);
+    padding: 8px 16px;
+    z-index: 10000;
+    font-family: var(--font-mono);
+    font-size: var(--text-body);
+    border: 1px solid var(--cyan-border);
+    transition: top var(--fast) var(--ease);
+}
+
+.skip-link:focus {
+    top: 8px;
+}
+
+/* ─── Utility Classes ─── */
+.text-green {
+    color: var(--green);
+}
+
+.text-cyan {
+    color: var(--cyan);
+}
+
+.text-amber {
+    color: var(--amber);
+}
+
+.text-red {
+    color: var(--red);
+}
+
+.text-purple {
+    color: var(--purple);
+}
+
+.text-bright {
+    color: var(--text-bright);
+}
+
+.text-primary {
+    color: var(--text-primary);
+}
+
+.text-secondary {
+    color: var(--text-secondary);
+}
+
+.text-muted {
+    color: var(--text-muted);
+}
+
+.text-dim {
+    color: var(--text-dim);
+}
+
+.font-display {
+    font-family: var(--font-display);
+}
+
+.font-mono {
+    font-family: var(--font-mono);
+}
+
+/* ─── Glow on hover (for colored values) ─── */
+.glow-hover {
+    transition: text-shadow var(--normal) var(--ease);
+}
+
+.glow-hover:hover {
+    text-shadow: 0 0 20px currentColor;
+}
+
+/* ─── Layout Shell ─── */
+.app-layout {
+    display: grid;
+    grid-template-columns: var(--sidenav-width) 1fr;
+    grid-template-rows: var(--topbar-height) 1fr;
+    min-height: 100vh;
+}
+
+.main-content {
+    grid-column: 2;
+    grid-row: 2;
+    max-width: var(--content-max-width);
+    padding: 0 4vw;
+    width: 100%;
+    margin: 0 auto;
+    justify-self: center;
+}
+
+/* ─── Section spacing ─── */
+section {
+    padding: var(--space-10) 0;
+}
+
+section+section {
+    border-top: 1px solid var(--border-subtle);
+}
+
+/* ─── Scroll Reveal Animations ─── */
+.reveal-item {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
+    will-change: opacity, transform;
+}
+
+.reveal-item.in-view {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .reveal-item {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+}
+
+/* ─── Executive Mode Overrides (Light Theme) ─── */
+body.mode-executive {
+    --void: #f4f4f5;
+    --panel: #ffffff;
+    --panel-inset: #f8f9fa;
+    --border: #e4e4e7;
+    --border-active: #d4d4d8;
+    --border-subtle: #f4f4f5;
+
+    --text-bright: #09090b;
+    --text-primary: #18181b;
+    --text-secondary: #3f3f46;
+    --text-muted: #52525b;
+    --text-dim: #71717a;
+
+    --cyan: #0284c7;
+    --cyan-glow: rgba(2, 132, 199, 0.05);
+    --cyan-border: rgba(2, 132, 199, 0.2);
+
+    --green: #16a34a;
+    --green-glow: rgba(22, 163, 74, 0.05);
+    --green-border: rgba(22, 163, 74, 0.2);
+
+    --purple: #7c3aed;
+    --amber: #d97706;
+    --red: #dc2626;
+
+    /* Turn off the raw CRT overlay scanlines in printable mode */
+}
+
+body.mode-executive::after {
+    display: none;
+}
+
+body.mode-executive .glow-hover:hover {
+    text-shadow: none;
+}
+
+/* ─── Idle Settle Mode ─── */
+body {
+    transition: opacity 0.5s ease, filter 0.5s ease, background-color 0.5s ease;
+}
+
+/* ─── Easter Eggs ─── */
+body.konami-active {
+    animation: glitch-anim 0.2s linear infinite;
+    --cyan: #ff00ff;
+    /* turn cyan to magenta */
+    --green: #00ff00;
+    /* hyper green */
+    font-family: 'Courier New', Courier, monospace !important;
+}
+
+@keyframes glitch-anim {
+    0% {
+        filter: hue-rotate(0deg) invert(0%);
+        transform: translate(0);
+    }
+
+    20% {
+        filter: hue-rotate(90deg) invert(10%);
+        transform: translate(-2px, 1px);
+    }
+
+    40% {
+        filter: hue-rotate(180deg) invert(0%);
+        transform: translate(2px, -1px);
+    }
+
+    60% {
+        filter: hue-rotate(270deg) invert(20%);
+        transform: translate(-1px, 2px);
+    }
+
+    80% {
+        filter: hue-rotate(360deg) invert(0%);
+        transform: translate(1px, -2px);
+    }
+
+    100% {
+        filter: hue-rotate(0deg) invert(10%);
+        transform: translate(0);
+    }
+}
+
+/* ─── Print & PDF Generation Styles ─── */
+@media print {
+    :root {
+        /* Force Light / Executive Mode Colors */
+        --bg-void: #ffffff;
+        --bg-panel: #ffffff;
+        --bg-panel-inset: #f8fafc;
+
+        --border-color: #e2e8f0;
+        --border-active: #cbd5e1;
+        --border-subtle: #f1f5f9;
+
+        --text-bright: #0f172a;
+        --text-primary: #1e293b;
+        --text-secondary: #334155;
+        --text-muted: #475569;
+        --text-dim: #64748b;
+
+        --cyan: #0284c7;
+        --green: #16a34a;
+        --purple: #7c3aed;
+        --amber: #d97706;
+        --red: #dc2626;
+
+        --topbar-height: 0px;
+        --sidenav-width: 0px;
+    }
+
+    body {
+        background: var(--bg-void) !important;
+        color: var(--text-primary) !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    /* Hide UI Elements */
+    #tsparticles,
+    .topbar,
+    .sidenav,
+    .mobile-nav,
+    .palette-overlay,
+    .skip-link,
+    .boot-overlay,
+    .footer-meta {
+        display: none !important;
+    }
+
+    .layout-wrapper,
+    .main-content {
+        padding: 0 !important;
+        margin: 0 !important;
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+
+    /* Adjust Panels for Printing */
+    .panel {
+        background: var(--bg-panel) !important;
+        border: 1px solid var(--border-color) !important;
+        box-shadow: none !important;
+        color: var(--text-primary) !important;
+        page-break-inside: avoid;
+        margin-bottom: 20px !important;
+    }
+
+    section {
+        page-break-inside: avoid;
+        margin-bottom: 30px !important;
+        opacity: 1 !important;
+        transform: none !important;
+    }
+
+    .glow-hover:hover {
+        text-shadow: none !important;
+    }
+}

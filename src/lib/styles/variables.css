@@ -1,0 +1,239 @@
+/* ══════════════════════════════════════════════════════════════
+   NOC PORTFOLIO — DESIGN SYSTEM VARIABLES
+   ══════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ─── Background Hierarchy ─── */
+  --void: #040710;
+  --panel: #070d1a;
+  --panel-raised: #0b1223;
+  --panel-inset: #050c17;
+
+  /* ─── Border Hierarchy ─── */
+  --border-subtle: #0f1e35;
+  --border: #152038;
+  --border-active: #1e3260;
+  --border-bright: #2a4580;
+
+  /* ─── Semantic Colors ─── */
+  --green: #00ff88;
+  --green-glow: rgba(0, 255, 136, 0.12);
+  --green-border: rgba(0, 255, 136, 0.22);
+
+  --cyan: #00d4ff;
+  --cyan-glow: rgba(0, 212, 255, 0.12);
+  --cyan-border: rgba(0, 212, 255, 0.22);
+
+  --amber: #ffb347;
+  --amber-glow: rgba(255, 179, 71, 0.12);
+  --amber-border: rgba(255, 179, 71, 0.22);
+
+  --red: #ff4560;
+  --red-glow: rgba(255, 69, 96, 0.12);
+  --red-border: rgba(255, 69, 96, 0.22);
+
+  --purple: #a855f7;
+  --purple-glow: rgba(168, 85, 247, 0.12);
+  --purple-border: rgba(168, 85, 247, 0.22);
+
+  /* ─── Text Hierarchy ─── */
+  --text-bright: #ffffff;
+  --text-primary: #dceeff;
+  --text-secondary: #8ab0cc;
+  --text-muted: #4a6a88;
+  --text-dim: #2d4a68;
+
+  /* ─── Executive Mode Colors ─── */
+  --exec-bg: #f4f5f7;
+  --exec-surface: #ffffff;
+  --exec-border: #d1d9e0;
+  --exec-text: #1a2332;
+  --exec-text-sub: #4a5568;
+  --exec-accent: #0066cc;
+  --exec-green: #0d7040;
+
+  /* ─── Typography ─── */
+  --font-display: 'Chakra Petch', sans-serif;
+  --font-name: 'Space Grotesk', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* typography Scale - Increased for better readability */
+  --text-hero: clamp(4rem, 6vw, 6rem);
+  --text-section-title: 1.5rem;
+  --text-panel-title: 1.125rem;
+  --text-body: 1.05rem;
+  --text-label: 0.95rem;
+  --text-topbar: 0.9rem;
+  --text-micro: 0.85rem;
+
+  /* Spacing System (8px grid base, scaled down for tight NOC look) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 28px;
+  /* Was 32px */
+  --space-7: 36px;
+  /* Was 48px */
+  --space-8: 48px;
+  /* Was 64px */
+  --space-9: 64px;
+  /* Was 96px */
+  --space-10: 80px;
+  /* Was 128px */
+
+  /* ─── Panel ─── */
+  --panel-padding: 20px;
+  --panel-gap: 16px;
+
+  /* ─── Timing Tokens ─── */
+  --fast: 150ms;
+  --normal: 250ms;
+  --slow: 400ms;
+  --crawl: 800ms;
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --exit: cubic-bezier(0.4, 0, 1, 1);
+
+  /* ─── Layout ─── */
+  --topbar-height: 46px;
+  --sidenav-width: 54px;
+  --content-max-width: 1600px;
+}
+
+/* ─── Panel Component ─── */
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: var(--panel-padding);
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
+  transition: border-color var(--normal) var(--ease),
+    box-shadow var(--normal) var(--ease);
+  position: relative;
+}
+
+.panel:hover {
+  border-color: var(--border-active);
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.4), 0 0 1px rgba(0, 212, 255, 0.05);
+}
+
+.panel.active {
+  border-color: var(--cyan-border);
+  box-shadow: 0 0 24px rgba(0, 212, 255, 0.06);
+}
+
+/* Left accent bars */
+.panel--green {
+  border-left: 2px solid var(--green);
+}
+
+.panel--cyan {
+  border-left: 2px solid var(--cyan);
+}
+
+.panel--amber {
+  border-left: 2px solid var(--amber);
+}
+
+.panel--red {
+  border-left: 2px solid var(--red);
+}
+
+.panel--purple {
+  border-left: 2px solid var(--purple);
+}
+
+/* ─── Pulse Dot ─── */
+@keyframes pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.4;
+  }
+}
+
+.pulse-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  animation: pulse 1.5s ease-in-out infinite;
+  box-shadow: 0 0 6px var(--green);
+}
+
+/* ─── Section Tag ─── */
+.section-tag {
+  font-family: var(--font-display);
+  font-size: var(--text-section-title);
+  font-weight: 600;
+  color: var(--cyan);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: var(--space-6);
+}
+
+/* ─── Status Badge ─── */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  border: 1px solid;
+  clip-path: polygon(0 0, calc(100% - 4px) 0, 100% 4px, 100% 100%, 0 100%);
+}
+
+.status-badge--green {
+  color: var(--green);
+  border-color: var(--green-border);
+  background: var(--green-glow);
+}
+
+.status-badge--cyan {
+  color: var(--cyan);
+  border-color: var(--cyan-border);
+  background: var(--cyan-glow);
+}
+
+.status-badge--amber {
+  color: var(--amber);
+  border-color: var(--amber-border);
+  background: var(--amber-glow);
+}
+
+.status-badge--red {
+  color: var(--red);
+  border-color: var(--red-border);
+  background: var(--red-glow);
+}
+
+.status-badge--purple {
+  color: var(--purple);
+  border-color: var(--purple-border);
+  background: var(--purple-glow);
+}
+
+/* ─── Reduced Motion ─── */
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .pulse-dot {
+    animation: none;
+  }
+}
