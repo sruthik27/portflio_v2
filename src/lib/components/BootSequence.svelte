@@ -12,18 +12,17 @@
     // Hardcoded boot lines
     const baseLines = [
         '[  OK  ]  Loading identity module............... sruthik.issac',
-        '[  OK  ]  Verifying credentials................. AWS-SAA · CCNA · AZ-900',
-        '[  OK  ]  Resolving hostname.................... sruthikissac.dev',
+        '[  OK  ]  Verifying credentials................. AWS-SAA · CCNA · LANGCHAIN',
+        '[  OK  ]  Resolving hostname.................... noc.career_os.local',
         // Line 3 (0-indexed) will be the IP one
         null,
         '[  OK  ]  Mounting experience volume............ 2024-02 → present',
-        '[  OK  ]  Loading skill clusters................ 68 services detected',
+        '[  OK  ]  Loading skill clusters................ 50 services detected',
         '[  OK  ]  Initializing networking stack......... CCNA · AI_FOR_NETWORKING',
-        '[  OK  ]  Connecting to HPE Aruba node.......... chennai.hpe.aruba.in',
         '[  OK  ]  Activating cloud modules.............. AWS · AZURE · K8S',
-        '[  OK  ]  Loading AI/ML subsystems.............. LANGCHAIN · AGENTS · GENAI',
-        '<span class="warn">[ WARN ]</span>  34 certifications found............... some require renewal check',
-        '[  OK  ]  Starting project registry............. 9 deployments indexed',
+        '[  OK  ]  Loading AI/ML subsystems.............. LANGCHAIN · LANGGRAPH · MCP · RAG',
+        '<span class="warn">[ WARN ]</span>  33 certifications found............... some require renewal check',
+        '[  OK  ]  Starting project registry............. 15 deployments indexed',
         '[  OK  ]  Uptime counter initialized............ Feb 1, 2024 → now',
         '[  OK  ]  Ambient audio module.................. WAITING FOR USER INPUT',
         '[  OK  ]  All systems nominal.'

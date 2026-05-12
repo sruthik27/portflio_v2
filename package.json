@@ -8,6 +8,8 @@
 		"build": "vite build",
 		"preview": "vite preview",
 		"test:e2e": "playwright test",
+		"resume:pdf": "node scripts/generate-resume-pdf.js",
+		"build:full": "npm run build && npm run resume:pdf && npm run build",
 		"prepare": "svelte-kit sync || echo ''"
 	},
 	"devDependencies": {

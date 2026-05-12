@@ -9,10 +9,16 @@
   import NocBotGuide from '$lib/components/NocBotGuide.svelte';
   import { activeSection, bootComplete, executiveMode, isIdle, tourActive } from '$lib/stores.svelte.js';
   import { onMount } from 'svelte';
+  import { page } from '$app/state';
   import { initEasterEggs } from '$lib/utils/easterEggs.js';
   import { setupGlobalAudioUnlock } from '$lib/utils/audio.js';
+  import { initNocCursor } from '$lib/utils/cursor.js';
+  import { initPanelTilt } from '$lib/utils/panelTilt.js';
 
   let { children } = $props();
+
+  // Standalone routes (resume, etc.) render without portfolio chrome.
+  const isStandalone = $derived(page.url.pathname.startsWith('/resume'));
 
   // Initialize activeSection if empty
   $effect(() => {
@@ -22,8 +28,11 @@
   });
 
   onMount(() => {
+    // Skip portfolio-wide setup on standalone pages.
+    if (page.url.pathname.startsWith('/resume')) return;
+
     setupGlobalAudioUnlock();
-    
+
     let idleTimeout;
     const IDLE_TIME = 180000; // 3 minutes
 
@@ -41,8 +50,9 @@
     window.addEventListener('scroll', resetIdle);
     resetIdle();
 
-    // Initialize global easter egg listeners
     initEasterEggs();
+    const disposeCursor = initNocCursor();
+    const disposeTilt = initPanelTilt();
 
     return () => {
       window.removeEventListener('mousemove', resetIdle);
@@ -50,6 +60,8 @@
       window.removeEventListener('touchstart', resetIdle);
       window.removeEventListener('scroll', resetIdle);
       clearTimeout(idleTimeout);
+      disposeCursor();
+      disposeTilt();
     };
   });
   // Apply global body classes reactively
@@ -57,29 +69,34 @@
     if (typeof document !== 'undefined') {
       document.body.classList.toggle('mode-executive', executiveMode.value);
       document.body.classList.toggle('is-idle', isIdle.value);
+      document.body.classList.toggle('mode-standalone', isStandalone);
     }
   });
 </script>
 
-<a href="#hero" class="skip-link">Skip to content</a>
+{#if !isStandalone}
+  <a href="#hero" class="skip-link">Skip to content</a>
 
-<BootSequence />
+  <BootSequence />
 
-{#if bootComplete.value}
-  <ParticleBackground />
+  {#if bootComplete.value}
+    <ParticleBackground />
+  {/if}
 {/if}
 
-<div class="layout-wrapper" class:visible={bootComplete.value}>
-  <TopBar />
-  <TopNav />
-  <MobileNav />
-  <CommandPalette />
+<div class="layout-wrapper" class:visible={bootComplete.value} class:layout-wrapper--standalone={isStandalone}>
+  {#if !isStandalone}
+    <TopBar />
+    <TopNav />
+    <MobileNav />
+    <CommandPalette />
 
-  {#if tourActive.value}
-    <NocBotGuide />
+    {#if tourActive.value}
+      <NocBotGuide />
+    {/if}
   {/if}
 
-  <main class="main-content" id="main">
+  <main class="main-content" class:main-content--standalone={isStandalone} id="main">
     {@render children()}
   </main>
 </div>
@@ -95,6 +112,12 @@
     min-height: 100vh;
   }
 
+  .layout-wrapper--standalone {
+    padding-top: 0;
+    animation: none;
+    opacity: 1;
+  }
+
   @keyframes layoutFadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
@@ -107,12 +130,20 @@
     padding: 0 4vw;
   }
 
+  .main-content--standalone {
+    max-width: none;
+    padding: 0;
+  }
+
   @media (max-width: 768px) {
     .layout-wrapper {
       padding-left: 0;
     }
     .main-content {
       padding: 0 24px;
+    }
+    .main-content--standalone {
+      padding: 0;
     }
   }
 </style>

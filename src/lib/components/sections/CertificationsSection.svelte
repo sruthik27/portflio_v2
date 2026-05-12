@@ -1,67 +1,69 @@
 <script>
   import { reveal } from '$lib/actions/scroll.js';
 
-  // Specific highlighted certs from plan
+  // Source of truth: linkedin.com/in/sruthik-issac/details/certifications/ (33 total)
+  // Featured 7 with high-res certificate images
   const featured = [
-    { id: 'aws-saa', name: 'AWS Solutions Architect Associate (SAA-C03)', authority: 'AWS', tag: 'Cloud', class: '', date: '2024', image: '/assets/certificates/aws-saa.png' },
-    { id: 'aws-ai', name: 'AWS Certified AI Practitioner', authority: 'AWS', tag: 'Agent', class: '', date: '2025', image: '/assets/certificates/aws-ai.png' },
-    { id: 'ccna', name: 'Cisco Certified Network Associate (CCNA)', authority: 'Cisco', tag: 'Networking', class: '', date: '2026', image: '/assets/certificates/ccna.png' },
-    { id: 'arangodb', name: 'ArangoDB Certified Professional', authority: 'ArangoDB', tag: 'Full Stack', class: '', date: '2024', image: '/assets/certificates/arangodb.png' },
-    { id: 'ethical-hacker', name: 'Ethical Hacker', authority: 'Cisco', tag: 'Networking', class: '', date: '2024', image: '/assets/certificates/ethical-hacker.png' },
-    { id: 'graphql', name: 'GraphQL Developer Associate', authority: 'Apollo', tag: 'Full Stack', class: '', date: '2024', image: '/assets/certificates/graphql.png' },
-    { id: 'langchain', name: 'LangChain Essentials', authority: 'LangChain', tag: 'Agent', class: '', date: '2024', image: '/assets/certificates/langchain.png' }
+    { id: 'aws-saa', name: 'AWS Solutions Architect Associate (SAA-C03)', authority: 'AWS', tag: 'Cloud', class: '', date: 'Oct 2024 · expires Oct 2027', image: '/assets/certificates/aws-saa.png', url: 'https://www.credly.com/badges/c4048f00-9582-48de-9769-d988ebc1fe0d/public_url' },
+    { id: 'aws-ai', name: 'AWS Certified AI Practitioner', authority: 'AWS', tag: 'Agent', class: '', date: 'Apr 2025 · expires Apr 2028', image: '/assets/certificates/aws-ai.png', url: 'https://www.credly.com/badges/b3453751-564c-4c34-b3a8-f021a4e6eac7/linked_in_profile' },
+    { id: 'ccna', name: 'Cisco Certified Network Associate (CCNA)', authority: 'Cisco', tag: 'Networking', class: '', date: 'Jan 2026 · expires Jan 2029', image: '/assets/certificates/ccna.png', url: 'https://www.credly.com/badges/9ed33757-4118-43d1-ab23-7d0317d7f019/linked_in_profile' },
+    { id: 'arangodb', name: 'ArangoDB Certified Professional', authority: 'ArangoDB', tag: 'Full Stack', class: '', date: 'Aug 2024', image: '/assets/certificates/arangodb.png', url: null },
+    { id: 'ethical-hacker', name: 'Ethical Hacker', authority: 'Cisco', tag: 'Networking', class: '', date: 'Jun 2024', image: '/assets/certificates/ethical-hacker.png', url: 'https://www.credly.com/badges/c004134e-4f4d-46b0-9737-77e200ab5d4a/public_url' },
+    { id: 'graphql', name: 'GraphQL Developer Associate', authority: 'Apollo', tag: 'Full Stack', class: '', date: 'Aug 2024', image: '/assets/certificates/graphql.png', url: 'https://www.apollographql.com/tutorials/certifications/da1e3195-d193-4c4e-b2b6-876b70c15beb' },
+    { id: 'langchain', name: 'LangChain Essentials', authority: 'LangChain', tag: 'Agent', class: '', date: 'Jan 2026', image: '/assets/certificates/langchain.png', url: 'https://academy.langchain.com/certificates/tphiklamp2' }
   ];
 
-  // Rest of the 34 certs categorized dynamically
+  // Remaining 26 certs (33 total − 7 featured) — verbatim from LinkedIn certifications detail
   const categories = {
     'Cisco': [
-      { name: 'AI for Networking', tag: 'Agent' },
-      { name: 'Cybersecurity', tag: 'Networking' },
-      { name: 'Networking Basics', tag: 'Networking' },
-      { name: 'Networking Devices CCNA Intro', tag: 'Networking' }
+      { name: 'AI for Networking',                          tag: 'Agent',      date: 'Jul 2025 · expires Jul 2028', url: 'https://www.credly.com/badges/0e2099e9-1bf4-41fc-8c0d-9dfe415c2623/linked_in_profile' },
+      { name: 'Networking Devices and Initial Configuration', tag: 'Networking', date: 'Jan 2025',                    url: 'https://www.credly.com/badges/a329ff3a-a282-48d3-8e43-8ca26b090346/linked_in_profile' },
+      { name: 'Introduction to Cybersecurity',              tag: 'Networking', date: 'Jan 2024',                    url: 'https://www.credly.com/badges/29924e59-c257-4bba-884a-7b729f86cea2/linked_in_profile' },
+      { name: 'Networking Basics',                          tag: 'Networking', date: 'Aug 2023',                    url: 'https://www.credly.com/badges/1314dcf4-fa0e-4137-8aeb-2ea57b11d28c/linked_in_profile' },
+      { name: 'CCNA: Introduction to Networks',             tag: 'Networking', date: 'Mar 2023 · expired Mar 2026', url: 'https://www.credly.com/badges/1da277c9-5c9a-45c6-98f2-11b709d86267/linked_in_profile' }
     ],
     'Microsoft': [
-      { name: 'Azure Fundamentals AZ-900', tag: 'Cloud' }
+      { name: 'Azure Fundamentals (AZ-900)',                tag: 'Cloud',      date: 'Dec 2023',                    url: 'https://learn.microsoft.com/api/credentials/share/en-us/SRUTHIKI-2664/E516129387546A86' }
     ],
     'HPE': [
-      { name: 'Open Source Tools + Ezmeral', tag: 'Cloud' },
-      { name: 'Kubernetes Containers', tag: 'Cloud' }
+      { name: 'Application Containers and Kubernetes',      tag: 'Cloud',      date: 'Aug 2023',                    url: 'https://verify.skilljar.com/c/7u2dyww3wqpy' },
+      { name: 'Open Source Tools and HPE Ezmeral Software', tag: 'Cloud',      date: 'Aug 2023',                    url: 'http://verify.skilljar.com/c/v636fzrkzncy' }
     ],
     'HackerRank': [
-      { name: 'Python', tag: 'Full Stack' },
-      { name: 'Problem Solving', tag: 'Full Stack' },
-      { name: 'SQL', tag: 'Full Stack' },
-      { name: 'C#', tag: 'Full Stack' },
-      { name: 'Go', tag: 'Full Stack' },
-      { name: 'REST API', tag: 'Full Stack' }
+      { name: 'Go Basics',                                  tag: 'Full Stack', date: 'Oct 2024',                    url: 'https://www.hackerrank.com/certificates/4799cc69e912' },
+      { name: 'REST API',                                   tag: 'Full Stack', date: 'Aug 2023',                    url: 'https://www.hackerrank.com/certificates/17827f9ef069' },
+      { name: 'C#',                                         tag: 'Full Stack', date: 'Jun 2023',                    url: 'https://www.hackerrank.com/certificates/90b7685b4496' },
+      { name: 'SQL',                                        tag: 'Full Stack', date: 'Jun 2023',                    url: 'https://www.hackerrank.com/certificates/8867595f6cd3' },
+      { name: 'Problem Solving',                            tag: 'Full Stack', date: 'Jun 2023',                    url: 'https://www.hackerrank.com/certificates/45a980007a73' },
+      { name: 'Python Basics',                              tag: 'Full Stack', date: 'Jun 2023',                    url: 'https://www.hackerrank.com/certificates/0e066a91641b' }
     ],
     'ZTM': [
-      { name: 'SQL Bootcamp', tag: 'Full Stack' },
-      { name: 'Web Developer', tag: 'Full Stack' },
-      { name: 'UX/UI Designer', tag: 'Full Stack' }
+      { name: 'The Complete Web Developer',                 tag: 'Full Stack', date: 'Nov 2023',                    url: 'https://www.udemy.com/certificate/UC-fa485113-20a2-4e49-9a30-3ee1edc863e9/' },
+      { name: 'Web & Mobile Designer · UI/UX',              tag: 'Full Stack', date: 'Jul 2023',                    url: 'https://www.ude.my/UC-d1a52d26-33a7-49a5-b0bf-db74d9abbfd5' },
+      { name: 'Complete SQL & Databases Bootcamp',          tag: 'Full Stack', date: 'May 2023',                    url: 'https://www.udemy.com/certificate/UC-ee86519b-768a-4854-b0e2-3fb58b951b65/' }
     ],
     'Udemy': [
-      { name: 'TypeScript+React', tag: 'Full Stack' },
-      { name: 'Java Concurrency', tag: 'Full Stack' }
+      { name: 'Concurrent and Parallel Programming with Java', tag: 'Full Stack', date: 'Jun 2024',                 url: 'https://www.udemy.com/certificate/UC-68a5b5db-f754-4300-9c38-d4397ceeaa39/' },
+      { name: 'TypeScript with React',                      tag: 'Full Stack', date: 'Jun 2024',                    url: 'https://www.udemy.com/certificate/UC-1836e585-b706-44b8-a59e-5580fc1cb433/' }
     ],
     'Google': [
-      { name: 'Bits and Bytes of Networking', tag: 'Networking' }
+      { name: 'The Bits and Bytes of Computer Networking',  tag: 'Networking', date: 'Dec 2024',                    url: 'https://www.coursera.org/account/accomplishments/verify/ATWWK7L1756N' }
     ],
     'NPTEL': [
-      { name: 'Cloud Computing', tag: 'Cloud' }
+      { name: 'Cloud Computing (IIT Kharagpur)',            tag: 'Cloud',      date: 'Oct 2022',                    url: 'https://archive.nptel.ac.in/noc/Ecertificate/?q=NPTEL22CS87S5421118910067059' }
     ],
     'Confluent': [
-      { name: 'Confluent Fundamentals', tag: 'Cloud' }
+      { name: 'Confluent Fundamentals Accreditation',       tag: 'Cloud',      date: 'Jul 2024',                    url: 'https://certificates.confluent.io/1e4de551-417d-46e8-a446-84dec4a243bf' }
     ],
     'Redis': [
-      { name: 'Redis for Java', tag: 'Full Stack' },
-      { name: 'Redis Streams', tag: 'Full Stack' }
+      { name: 'Redis Streams',                              tag: 'Full Stack', date: 'Aug 2024',                    url: 'https://university.redis.com/certificates/b1933ae1a3d443c89fe52113ab822f8b' },
+      { name: 'Redis for Java Developers',                  tag: 'Full Stack', date: 'Aug 2024',                    url: 'https://university.redis.com/certificates/2f80fd960a474938b424a41d11ee0e95' }
     ],
     'ClickHouse': [
-      { name: 'ClickHouse Developer', tag: 'Full Stack' }
+      { name: 'ClickHouse Developer',                       tag: 'Full Stack', date: 'Jun 2024',                    url: 'https://www.credly.com/badges/59159e3c-3aff-4d6f-bca5-bd5f27d87292/linked_in_profile' }
     ],
     'MongoDB': [
-      { name: 'Building GenAI Apps', tag: 'Agent' }
+      { name: 'Building GenAI Apps',                        tag: 'Agent',      date: 'Jan 2026',                    url: 'https://learn.mongodb.com/c/fUMOE2I2SgOfIxTHUh9PCA' }
     ]
   };
 
@@ -72,18 +74,19 @@
     for (const item of items) {
       allCerts.push({
         id: `cert-${idCounter++}`,
-        name: typeof item === 'object' ? item.name : item,
-        tag: typeof item === 'object' ? item.tag : 'Other',
+        name: item.name,
+        tag: item.tag,
         authority,
         class: '',
-        date: '2023-2024'
+        date: item.date,
+        url: item.url
       });
     }
   }
 
-  // Filter state
-  const TABS = ['ALL 34', 'CISCO 6', 'AWS 2', 'MICROSOFT 1', 'HPE 2', 'HACKERRANK 6', 'OTHER'];
-  let activeTab = $state('ALL 34');
+  // Filter state — counts derived from real LinkedIn data (CCNA + Ethical Hacker featured count under CISCO)
+  const TABS = ['ALL 33', 'CISCO 7', 'AWS 2', 'MICROSOFT 1', 'HPE 2', 'HACKERRANK 6', 'OTHER'];
+  let activeTab = $state('ALL 33');
 
   function setTab(tab) {
     activeTab = tab;
@@ -91,7 +94,7 @@
   }
 
   let filteredCerts = $derived.by(() => {
-    if (activeTab === 'ALL 34') return allCerts;
+    if (activeTab === 'ALL 33') return allCerts;
     const key = activeTab.split(' ')[0]; // CISCO, AWS, etc.
     if (key === 'OTHER') {
       const mainAuths = ['Cisco', 'AWS', 'Microsoft', 'HPE', 'HackerRank'];
@@ -148,8 +151,8 @@
         activeCertImage = cert.image;
         activeCertName = cert.name;
         isModalOpen = true;
-      } else {
-        window.open(`https://credly.com/earner/earned/badge/${cert.id}`, '_blank');
+      } else if (cert.url) {
+        window.open(cert.url, '_blank', 'noopener,noreferrer');
       }
       return;
     }
@@ -177,8 +180,8 @@
         activeCertImage = cert.image;
         activeCertName = cert.name;
         isModalOpen = true;
-      } else {
-        window.open(`https://credly.com/earner/earned/badge/${cert.id}`, '_blank');
+      } else if (cert.url) {
+        window.open(cert.url, '_blank', 'noopener,noreferrer');
       }
     }, 500);
   }
@@ -186,14 +189,18 @@
   function getButtonText(cert) {
     const s = verifyState[cert.id];
     if (!s || s.status === 'idle') return '[ VERIFY CLEARANCE ]';
-    if (s.status === 'verified') return cert.image ? '[ VIEW CERTIFICATE ]' : '[↗ VIEW CREDENTIAL]';
+    if (s.status === 'verified') {
+      if (cert.image) return '[ VIEW CERTIFICATE ]';
+      if (cert.url) return '[↗ VIEW CREDENTIAL]';
+      return '[✓ NO PUBLIC LINK]';
+    }
     return s.text;
   }
 </script>
 
 <section id="certifications" class="certs-section reveal-item fade-up" use:reveal>
   <header class="section-header">
-    <h2 class="section-id">§ 05 // SECURITY CLEARANCES</h2>
+    <h2 class="section-id">▸ 05 // SECURITY CLEARANCES</h2>
     <div class="header-line"></div>
   </header>
 
@@ -223,16 +230,15 @@
 
             <div class="cert-header">
               <span class="cert-authority text-cyan">{cert.authority}</span>
-              <div class="header-right">
-                <span class="cert-tag tag-{cert.tag.replace(' ', '-').toLowerCase()}">{cert.tag}</span>
-                <span class="cert-date text-dim">{cert.date}</span>
-              </div>
+              <span class="cert-tag tag-{cert.tag.replace(' ', '-').toLowerCase()}">{cert.tag}</span>
             </div>
-            
-            <h3 class="cert-name text-primary">{cert.name}</h3>
 
-            <button 
-              class="verify-btn {vState.status}" 
+            <h3 class="cert-name text-primary" title={cert.name}>{cert.name}</h3>
+
+            <div class="cert-date text-dim">{cert.date}</div>
+
+            <button
+              class="verify-btn {vState.status}"
               onclick={() => handleVerify(cert)}
               disabled={vState.status === 'querying' || vState.status === 'validating'}
             >
@@ -423,8 +429,8 @@
   .cert-card {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    min-height: 160px;
+    gap: var(--space-2);
+    min-height: 200px;
     transition: transform 0.2s var(--ease), border-color 0.2s ease, box-shadow 0.2s;
   }
 
@@ -441,20 +447,19 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: var(--space-2);
     font-family: var(--font-mono);
     font-size: var(--text-micro);
-    margin-bottom: var(--space-2);
-  }
-
-  .header-right {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
+    min-height: 22px;
   }
 
   .cert-authority {
     font-weight: bold;
     letter-spacing: 0.05em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
   }
 
   .cert-tag {
@@ -466,6 +471,15 @@
     font-weight: bold;
     letter-spacing: 0.05em;
     white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .cert-date {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-top: -2px;
   }
 
   .tag-cloud { color: var(--cyan); border-color: var(--cyan-border); background: var(--cyan-glow); }
@@ -475,9 +489,16 @@
 
   .cert-name {
     font-family: var(--font-display);
-    font-size: 1.15rem;
-    margin: 0 0 var(--space-4) 0;
+    font-size: 1.05rem;
+    margin: 0;
     line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-height: calc(1.3em * 2);
   }
 
   /* Interaction Button */

@@ -1,11 +1,16 @@
 <script>
   import { reveal } from '$lib/actions/scroll.js';
+  import { PUBLIC_CONTACT_API_URL } from '$env/static/public';
 
   let traceState = $state('idle'); // idle, running, complete
   let linesVisible = $state(0);
   let formOpen = $state(false);
   let composeSubject = $state('');
   let composeBody = $state('');
+  let composeReplyTo = $state('');
+  let honeypot = $state('');
+  let submitState = $state('idle'); // idle, sending, sent, error
+  let errorMsg = $state('');
 
   // Attempt to mock a realistic trace
   const traceLines = [
@@ -33,13 +38,46 @@
     traceState = 'complete';
   }
 
-  function sendMessage() {
-    const subject = encodeURIComponent(composeSubject.trim() || 'Hello Sruthik');
-    const body = encodeURIComponent(composeBody.trim());
-    window.location.href = `mailto:sruthikissac2016@gmail.com?subject=${subject}&body=${body}`;
-    formOpen = false;
-    composeSubject = '';
-    composeBody = '';
+  async function sendMessage() {
+    if (submitState === 'sending') return;
+    if (!composeBody.trim()) {
+      submitState = 'error';
+      errorMsg = 'BODY REQUIRED';
+      return;
+    }
+
+    submitState = 'sending';
+    errorMsg = '';
+
+    try {
+      const res = await fetch(PUBLIC_CONTACT_API_URL, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          subject: composeSubject.trim(),
+          body: composeBody.trim(),
+          replyTo: composeReplyTo.trim(),
+          _hp: honeypot
+        })
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || `HTTP ${res.status}`);
+      }
+
+      submitState = 'sent';
+      setTimeout(() => {
+        formOpen = false;
+        composeSubject = '';
+        composeBody = '';
+        composeReplyTo = '';
+        submitState = 'idle';
+      }, 2000);
+    } catch (err) {
+      submitState = 'error';
+      errorMsg = (err?.message || 'NETWORK ERROR').toUpperCase();
+    }
   }
 
   function traceTrigger(node) {
@@ -59,17 +97,19 @@
   }
 
   const peers = [
-    { label: "PRIMARY EMAIL", val: "sruthikissac2016@gmail.com", btn: "[→ CONNECT]", url: "mailto:sruthikissac2016@gmail.com", blank: false },
-    { label: "PROFESSIONAL NETWORK", val: "linkedin.com/in/sruthikissac...", btn: "[→ OPEN]", url: "https://linkedin.com/in/sruthikissac-5b9119198", blank: true },
-    { label: "PERSONAL PORTFOLIO", val: "sruthik2016.pythonanywhere.com", btn: "[→ VISIT]", url: "https://sruthik2016.pythonanywhere.com", blank: true },
+    { label: "PRIMARY EMAIL", val: "sruthik2016@gmail.com", btn: "[→ CONNECT]", url: "mailto:sruthik2016@gmail.com", blank: false },
+    { label: "PROFESSIONAL NETWORK", val: "linkedin.com/in/sruthik-issac", btn: "[→ OPEN]", url: "https://www.linkedin.com/in/sruthik-issac/", blank: true },
+    { label: "GITHUB", val: "github.com/sruthik27", btn: "[→ OPEN]", url: "https://github.com/sruthik27", blank: true },
+    { label: "DEV.TO BLOG", val: "dev.to/sruthik_issac", btn: "[→ READ]", url: "https://dev.to/sruthik_issac", blank: true },
+    { label: "LEGACY PORTFOLIO", val: "sruthik2016.pythonanywhere.com", btn: "[→ VISIT]", url: "https://sruthik2016.pythonanywhere.com", blank: true },
     { label: "PHONE NODE", val: "+91 73735 22116", btn: "[→ DIAL]", url: "tel:+917373522116", blank: false },
-    { label: "LOCATION NODE", val: "Madurai / Chennai · Tamil Nadu", btn: "", url: null, blank: false }
+    { label: "LOCATION NODE", val: "Madurai / Chennai · Tamil Nadu, India", btn: "", url: null, blank: false }
   ];
 </script>
 
 <section id="contact" class="contact-section reveal-item fade-up" use:reveal>
   <header class="section-header">
-    <h2 class="section-id">§ 08 // ESTABLISH CONNECTION</h2>
+    <h2 class="section-id">▸ 07 // ESTABLISH CONNECTION</h2>
     <div class="header-line"></div>
   </header>
 
@@ -121,6 +161,14 @@
           <div class="compose-form panel panel--cyan">
             <div class="form-header text-dim">SECURE MAIL PROTOCOL</div>
             <input
+              type="email"
+              class="terminal-input"
+              placeholder="REPLY_TO_ (optional)"
+              bind:value={composeReplyTo}
+              aria-label="Your email for reply-to"
+              autocomplete="email"
+            />
+            <input
               type="text"
               class="terminal-input"
               placeholder="SUBJECT_"
@@ -133,10 +181,36 @@
               bind:value={composeBody}
               aria-label="Message body"
             ></textarea>
+            <input
+              type="text"
+              class="hp-field"
+              tabindex="-1"
+              autocomplete="off"
+              aria-hidden="true"
+              bind:value={honeypot}
+              name="_website"
+            />
             <div class="form-actions">
-              <button class="text-muted hover-bright" type="button" onclick={() => formOpen = false}>[CANCEL]</button>
-              <button class="text-green hover-bright" type="button" onclick={sendMessage}>[SEND PAYLOAD]</button>
+              <button
+                class="text-muted hover-bright"
+                type="button"
+                onclick={() => { formOpen = false; submitState = 'idle'; errorMsg = ''; }}
+                disabled={submitState === 'sending'}
+              >[CANCEL]</button>
+              <button
+                class="text-green hover-bright"
+                type="button"
+                onclick={sendMessage}
+                disabled={submitState === 'sending' || submitState === 'sent'}
+              >[SEND PAYLOAD]</button>
             </div>
+            {#if submitState === 'sending'}
+              <div class="form-status text-cyan">▸ TRANSMITTING<span class="trace-cursor">_</span></div>
+            {:else if submitState === 'sent'}
+              <div class="form-status text-green">✓ PAYLOAD DELIVERED · CONNECTION CLOSING</div>
+            {:else if submitState === 'error'}
+              <div class="form-status text-error">✗ TRANSMISSION FAILED — {errorMsg}</div>
+            {/if}
           </div>
         {/if}
       </div>
@@ -200,12 +274,25 @@
     gap: var(--space-5);
   }
 
+  /* Grid items need min-width:0 to allow shrinking below content's intrinsic
+     width — otherwise long unbroken tokens like URLs force horizontal overflow. */
+  .contact-grid > * {
+    min-width: 0;
+  }
+
   .panel-header {
     display: flex;
     justify-content: space-between;
+    gap: var(--space-2);
     font-family: var(--font-mono);
     font-size: var(--text-micro);
     margin-bottom: var(--space-4);
+    min-width: 0;
+  }
+
+  .panel-header .text-dim {
+    overflow-wrap: anywhere;
+    min-width: 0;
   }
 
   .icon-btn {
@@ -358,6 +445,30 @@
     font-size: inherit;
   }
 
+  .form-actions button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .hp-field {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .form-status {
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    letter-spacing: 0.05em;
+  }
+
+  .text-error {
+    color: #ff6b6b;
+  }
+
   /* Registry */
   .registry-panel {
     display: flex;
@@ -379,13 +490,18 @@
 
   .peer-row {
     display: grid;
-    grid-template-columns: 180px 1fr auto;
+    grid-template-columns: 180px minmax(0, 1fr) auto;
     gap: var(--space-3);
     align-items: center;
     font-family: var(--font-mono);
     font-size: 0.85rem;
     border-bottom: 1px dashed var(--border-subtle);
     padding-bottom: var(--space-3);
+  }
+
+  .peer-val {
+    overflow-wrap: anywhere;
+    min-width: 0;
   }
 
   .peer-row:last-child {
@@ -404,17 +520,19 @@
     }
   }
 
-  @media (max-width: 600px) {
+  @media (max-width: 768px) {
     .trace-console {
       font-size: 0.65rem;
       overflow-x: auto;
     }
-    
+  }
+
+  @media (max-width: 600px) {
     .peer-row {
       grid-template-columns: 1fr;
       gap: var(--space-1);
     }
-    
+
     .peer-action {
       margin-top: var(--space-2);
     }

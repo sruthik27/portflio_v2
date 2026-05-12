@@ -111,12 +111,66 @@
   transition: border-color var(--normal) var(--ease),
     box-shadow var(--normal) var(--ease);
   position: relative;
+  /* clip-path already clips descendants (incl. the holo ::after); avoid
+     `overflow: hidden` here so internal tooltips (e.g. domain skill
+     hover) can still escape the panel bounds. */
+}
+
+/* ─── Holographic shimmer (UPGRADE 04) ─── */
+@property --holo-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.panel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: conic-gradient(
+    from var(--holo-angle) at var(--mx, 50%) var(--my, 50%),
+    transparent 0deg,
+    rgba(0, 212, 255, 0.08) 60deg,
+    rgba(168, 85, 247, 0.1)  120deg,
+    rgba(0, 255, 136, 0.08)  180deg,
+    rgba(255, 179, 71, 0.05) 240deg,
+    transparent 300deg
+  );
+  opacity: 0;
+  transition: opacity var(--normal) var(--ease);
+  animation: holoRot 6s linear infinite;
+  z-index: 0;
+}
+
+.panel:hover::after {
+  opacity: 1;
+}
+
+.panel > * {
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes holoRot {
+  to { --holo-angle: 360deg; }
 }
 
 .panel:hover {
   border-color: var(--border-active);
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.4), 0 0 1px rgba(0, 212, 255, 0.05);
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .panel::after { animation: none; }
+  .panel:hover::after { opacity: 0; }
+}
+
+body.mode-executive .panel::after { display: none; }
+
+/* Opt-out for large content panels where tilt + holo shimmer feels overwrought */
+.panel.panel--static::after { display: none; }
+.panel.panel--static:hover::after { opacity: 0; }
 
 .panel.active {
   border-color: var(--cyan-border);
@@ -167,15 +221,17 @@
   box-shadow: 0 0 6px var(--green);
 }
 
-/* ─── Section Tag ─── */
-.section-tag {
-  font-family: var(--font-display);
-  font-size: var(--text-section-title);
-  font-weight: 600;
-  color: var(--cyan);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  margin-bottom: var(--space-6);
+/* ─── Mobile-safe section headers ─── */
+@media (max-width: 768px) {
+  /* `.section-id` is defined per-section with `white-space: nowrap`, which
+     pushes long titles past the viewport on narrow mobile (e.g.
+     "FIRMWARE & TRAINING MODULES"). Allow wrapping. !important needed to beat
+     scoped Svelte CSS. */
+  .section-id {
+    white-space: normal !important;
+    word-break: break-word;
+    line-height: 1.3;
+  }
 }
 
 /* ─── Status Badge ─── */

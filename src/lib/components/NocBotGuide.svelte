@@ -37,7 +37,7 @@
     {
       section: 'certs',
       position: 'top-right',
-      speech: "30 plus certifications. At this point I think he's collecting them like they're Pokémon cards. Gotta catch 'em all I guess.",
+      speech: "33 certifications. At this point I think he's collecting them like they're Pokémon cards. Gotta catch 'em all I guess.",
       audio: '/assets/step-5.mp3',
     },
     {

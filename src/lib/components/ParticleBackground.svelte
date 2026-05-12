@@ -1,194 +1,187 @@
 <script>
-    import { onMount } from 'svelte';
+  // ─── Hex Topology Network Background (UPGRADE 02) ───────────────────
+  // Canvas 2D hex tessellation with mouse-magnetic distortion and pulsing
+  // node activity. Replaces the Three.js particle field — lighter bundle,
+  // more on-theme for a network engineer portfolio.
+  import { onMount } from 'svelte';
 
-    let container;
+  let canvas = $state(null);
 
-    onMount(async () => {
-        // Dynamically import Three.js
-        const THREE = await import('three');
+  onMount(() => {
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
 
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        
-        let renderer;
-        try {
-            const canvas = document.createElement('canvas');
-            const context =
-                canvas.getContext('webgl2', { alpha: true, antialias: true }) ||
-                canvas.getContext('webgl', { alpha: true, antialias: true }) ||
-                canvas.getContext('experimental-webgl', { alpha: true, antialias: true });
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isMobile = window.innerWidth < 768;
+    const HEX_SIZE = isMobile ? 34 : 30;
+    const INFLUENCE_RADIUS = 120;
+    const EDGE_DISTANCE = HEX_SIZE * 2.2;
 
-            if (!context) {
-                return;
-            }
+    let W = 0, H = 0, dpr = 1;
+    let nodes = [];
+    let mouse = { x: -9999, y: -9999 };
+    let rafId;
 
-            renderer = new THREE.WebGLRenderer({ canvas, context, alpha: true, antialias: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // optimize performance
-            container.appendChild(renderer.domElement);
-        } catch (e) {
-            return; // Gracefully exit without rendering
+    function resize() {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = window.innerWidth;
+      H = window.innerHeight;
+      canvas.width = W * dpr;
+      canvas.height = H * dpr;
+      canvas.style.width = W + 'px';
+      canvas.style.height = H + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      buildGrid();
+    }
+
+    function buildGrid() {
+      nodes = [];
+      const w = HEX_SIZE * 2;
+      const h = Math.sqrt(3) * HEX_SIZE;
+      const cols = Math.ceil(W / (w * 0.75)) + 2;
+      const rows = Math.ceil(H / h) + 2;
+      for (let r = -1; r < rows; r++) {
+        for (let c = -1; c < cols; c++) {
+          const x = c * w * 0.75;
+          const y = r * h + (c % 2 === 0 ? 0 : h / 2);
+          nodes.push({
+            ox: x,
+            oy: y,
+            x,
+            y,
+            pulse: Math.random() * Math.PI * 2,
+            speed: 0.008 + Math.random() * 0.012,
+            active: Math.random() > 0.62
+          });
+        }
+      }
+    }
+
+    function drawHex(x, y, size, alpha) {
+      ctx.beginPath();
+      for (let i = 0; i < 6; i++) {
+        const a = (Math.PI / 3) * i - Math.PI / 6;
+        const px = x + size * Math.cos(a);
+        const py = y + size * Math.sin(a);
+        if (i === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
+      ctx.closePath();
+      ctx.strokeStyle = `rgba(0,212,255,${alpha})`;
+      ctx.lineWidth = 0.6;
+      ctx.stroke();
+    }
+
+    function frame() {
+      rafId = requestAnimationFrame(frame);
+      ctx.clearRect(0, 0, W, H);
+
+      for (let i = 0; i < nodes.length; i++) {
+        const n = nodes[i];
+        n.pulse += n.speed;
+
+        const dx = mouse.x - n.ox;
+        const dy = mouse.y - n.oy;
+        const dist = Math.hypot(dx, dy);
+        const push = dist < INFLUENCE_RADIUS ? 1 - dist / INFLUENCE_RADIUS : 0;
+        if (push > 0) {
+          const angle = Math.atan2(n.oy - mouse.y, n.ox - mouse.x);
+          n.x = n.ox + Math.cos(angle) * push * 14;
+          n.y = n.oy + Math.sin(angle) * push * 14;
+        } else {
+          n.x = n.ox;
+          n.y = n.oy;
         }
 
-        // Settings
-        const particleCount = window.innerWidth < 768 ? 40 : 120; // scale down for mobile
-        const maxDistance = 120;
-        
-        // Geometry for Particles
-        const geometry = new THREE.BufferGeometry();
-        const positions = new Float32Array(particleCount * 3);
-        const velocities = [];
+        const glow = (Math.sin(n.pulse) + 1) / 2;
+        const alpha = n.active ? 0.06 + glow * 0.1 : 0.035;
+        drawHex(n.x, n.y, HEX_SIZE - 4, alpha);
 
-        for (let i = 0; i < particleCount; i++) {
-            positions[i * 3] = (Math.random() - 0.5) * window.innerWidth;
-            positions[i * 3 + 1] = (Math.random() - 0.5) * window.innerHeight;
-            positions[i * 3 + 2] = (Math.random() - 0.5) * 400; // Depth depth
-            
-            velocities.push({
-                x: (Math.random() - 0.5) * 0.5,
-                y: (Math.random() - 0.5) * 0.5,
-                z: (Math.random() - 0.5) * 0.5
-            });
+        if (n.active && glow > 0.72) {
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, 1.6, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(0,255,136,${(glow - 0.72) * 2.2})`;
+          ctx.fill();
         }
+      }
 
-        geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      // Connecting edges between nearby nodes (sparse to stay performant)
+      // Skip every other pair for a lighter look + better perf
+      const maxEdgeSq = EDGE_DISTANCE * EDGE_DISTANCE;
+      for (let i = 0; i < nodes.length; i++) {
+        const a = nodes[i];
+        // only look ahead a few indices — grid-adjacent nodes are always within the window
+        const jMax = Math.min(nodes.length, i + 8);
+        for (let j = i + 1; j < jMax; j++) {
+          const b = nodes[j];
+          const ddx = a.x - b.x;
+          const ddy = a.y - b.y;
+          const dSq = ddx * ddx + ddy * ddy;
+          if (dSq < maxEdgeSq) {
+            const edgeAlpha = (1 - dSq / maxEdgeSq) * 0.08;
+            ctx.beginPath();
+            ctx.moveTo(a.x, a.y);
+            ctx.lineTo(b.x, b.y);
+            ctx.strokeStyle = `rgba(0,212,255,${edgeAlpha})`;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
+        }
+      }
+    }
 
-        // Material for Particles
-        const material = new THREE.PointsMaterial({
-            color: 0x00d4ff, // Cyan
-            size: 2,
-            transparent: true,
-            opacity: 0.6
-        });
+    function onMouseMove(e) {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    }
+    function onMouseLeave() {
+      mouse.x = -9999;
+      mouse.y = -9999;
+    }
 
-        const particles = new THREE.Points(geometry, material);
-        scene.add(particles);
+    resize();
+    window.addEventListener('resize', resize);
+    window.addEventListener('mousemove', onMouseMove, { passive: true });
+    window.addEventListener('mouseleave', onMouseLeave);
 
-        // Lines Geometry
-        const lineMaterial = new THREE.LineBasicMaterial({
-            color: 0x00d4ff,
-            transparent: true,
-            opacity: 0.15
-        });
+    if (!reduceMotion) {
+      rafId = requestAnimationFrame(frame);
+    } else {
+      // Single static paint
+      ctx.clearRect(0, 0, W, H);
+      for (const n of nodes) drawHex(n.x, n.y, HEX_SIZE - 4, n.active ? 0.1 : 0.04);
+    }
 
-        // Pre-allocate buffer for lines (N * N-1 / 2) - we'll just allocate a large enough buffer and update draw range
-        const maxLines = particleCount * particleCount;
-        const linePositions = new Float32Array(maxLines * 6); // 2 vertices per line, 3 coords per vertex
-        const lineGeometry = new THREE.BufferGeometry();
-        lineGeometry.setAttribute('position', new THREE.BufferAttribute(linePositions, 3));
-        const linesMesh = new THREE.LineSegments(lineGeometry, lineMaterial);
-        scene.add(linesMesh);
-
-        camera.position.z = 400;
-
-        // Mouse interaction
-        let mouseX = 0;
-        let mouseY = 0;
-        let targetX = 0;
-        let targetY = 0;
-
-        const onMouseMove = (event) => {
-            mouseX = (event.clientX - window.innerWidth / 2);
-            mouseY = (event.clientY - window.innerHeight / 2);
-        };
-
-        window.addEventListener('mousemove', onMouseMove);
-
-        const onWindowResize = () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        };
-
-        window.addEventListener('resize', onWindowResize);
-
-        // Animation Loop
-        let animId;
-        const animate = () => {
-            animId = requestAnimationFrame(animate);
-
-            targetX = mouseX * 0.05;
-            targetY = mouseY * 0.05;
-            
-            // Subtly move camera based on mouse
-            camera.position.x += (targetX - camera.position.x) * 0.02;
-            camera.position.y += (-targetY - camera.position.y) * 0.02;
-            camera.lookAt(scene.position);
-
-            const positions = particles.geometry.attributes.position.array;
-            let lineIndex = 0;
-
-            // Move particles
-            for (let i = 0; i < particleCount; i++) {
-                // Update position
-                positions[i * 3] += velocities[i].x;
-                positions[i * 3 + 1] += velocities[i].y;
-                positions[i * 3 + 2] += velocities[i].z;
-
-                // Bounce off boundaries
-                if (Math.abs(positions[i * 3]) > window.innerWidth / 1.5) velocities[i].x *= -1;
-                if (Math.abs(positions[i * 3 + 1]) > window.innerHeight / 1.5) velocities[i].y *= -1;
-                if (Math.abs(positions[i * 3 + 2]) > 300) velocities[i].z *= -1;
-
-                // Connect close particles with lines
-                for (let j = i + 1; j < particleCount; j++) {
-                    const dx = positions[i * 3] - positions[j * 3];
-                    const dy = positions[i * 3 + 1] - positions[j * 3 + 1];
-                    const dz = positions[i * 3 + 2] - positions[j * 3 + 2];
-                    const distSq = dx * dx + dy * dy + dz * dz;
-
-                    if (distSq < maxDistance * maxDistance) {
-                        linePositions[lineIndex++] = positions[i * 3];
-                        linePositions[lineIndex++] = positions[i * 3 + 1];
-                        linePositions[lineIndex++] = positions[i * 3 + 2];
-                        
-                        linePositions[lineIndex++] = positions[j * 3];
-                        linePositions[lineIndex++] = positions[j * 3 + 1];
-                        linePositions[lineIndex++] = positions[j * 3 + 2];
-                    }
-                }
-            }
-
-            particles.geometry.attributes.position.needsUpdate = true;
-            linesMesh.geometry.attributes.position.needsUpdate = true;
-            linesMesh.geometry.setDrawRange(0, lineIndex / 3); // 3 coords per vertex
-
-            renderer.render(scene, camera);
-        };
-
-        animate();
-
-        return () => {
-            window.removeEventListener('mousemove', onMouseMove);
-            window.removeEventListener('resize', onWindowResize);
-            cancelAnimationFrame(animId);
-            renderer.dispose();
-            geometry.dispose();
-            material.dispose();
-            lineGeometry.dispose();
-            lineMaterial.dispose();
-            if (container) container.removeChild(renderer.domElement);
-        };
-    });
+    return () => {
+      cancelAnimationFrame(rafId);
+      window.removeEventListener('resize', resize);
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mouseleave', onMouseLeave);
+    };
+  });
 </script>
 
-<div bind:this={container} class="particle-bg" aria-hidden="true"></div>
+<canvas bind:this={canvas} class="particle-bg" aria-hidden="true"></canvas>
 
 <style>
-    .particle-bg {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        z-index: 0;
-        pointer-events: none; /* allows clicks to pass through to sections below */
-        opacity: 0;
-        animation: fadeBgIn 2s ease-in-out 1s forwards;
-    }
+  .particle-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0;
+    animation: fadeBgIn 2s ease-in-out 0.6s forwards;
+  }
 
-    /* Fade in smoothly after boot */
-    @keyframes fadeBgIn {
-        to { opacity: 0.8; }
-    }
+  @keyframes fadeBgIn {
+    to { opacity: 0.85; }
+  }
+
+  :global(body.mode-executive) .particle-bg {
+    display: none;
+  }
 </style>

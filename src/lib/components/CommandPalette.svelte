@@ -22,17 +22,29 @@
       action: () => { executiveMode.value = !executiveMode.value; close(); }, 
       icon: '◑' 
     },
-    { 
-      id: 'download-pdf', 
-      label: 'Print / Download PDF Resume', 
-      action: () => { window.print(); close(); }, 
-      icon: '↓' 
+    {
+      id: 'download-pdf',
+      label: 'Export Resume as PDF',
+      action: () => {
+        window.open('/resume?print=1', '_blank', 'noopener');
+        close();
+      },
+      icon: '↓'
+    },
+    {
+      id: 'view-resume',
+      label: 'View Resume',
+      action: () => {
+        window.open('/resume', '_blank', 'noopener');
+        close();
+      },
+      icon: '📄'
     },
     {
       id: 'sudo-hire-me',
       label: 'sudo hire-me',
       action: () => { 
-        window.location.href = 'mailto:sruthikissac2016@gmail.com?subject=Offer%20Letter%3A%20Sruthik%20Issac';
+        window.location.href = 'mailto:sruthik2016@gmail.com?subject=Offer%20Letter%3A%20Sruthik%20Issac';
         close();
       },
       icon: '★'

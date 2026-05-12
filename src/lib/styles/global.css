@@ -22,6 +22,9 @@ html {
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* Hard safety net — combined with body overflow-x:hidden, prevents any
+       horizontal scroll on mobile even if a child briefly overflows. */
+    overflow-x: clip;
 }
 
 body {
@@ -198,7 +201,7 @@ section+section {
     border-top: 1px solid var(--border-subtle);
 }
 
-/* ─── Scroll Reveal Animations ─── */
+/* ─── Scroll Reveal Animations (with UPGRADE 06 scan sweep) ─── */
 .reveal-item {
     opacity: 0;
     transform: translateY(20px);
@@ -211,12 +214,175 @@ section+section {
     transform: translateY(0);
 }
 
+/* NOC radar scan-line painted across section on reveal */
+.reveal-scan-line {
+    position: absolute;
+    top: 0;
+    left: -30%;
+    width: 40%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 5;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(0, 212, 255, 0.1) 30%,
+        rgba(0, 212, 255, 0.35) 50%,
+        rgba(0, 212, 255, 0.1) 70%,
+        transparent 100%
+    );
+    opacity: 0;
+    transform: translateX(0);
+    transition: opacity 0.25s var(--ease);
+}
+
+.reveal-scan-line.running {
+    opacity: 1;
+    animation: reveal-scan-pass 0.8s cubic-bezier(0.4, 0, 0.6, 1) forwards;
+}
+
+.reveal-scan-line.gone {
+    opacity: 0;
+}
+
+@keyframes reveal-scan-pass {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(325%); }
+}
+
 @media (prefers-reduced-motion: reduce) {
     .reveal-item {
         opacity: 1;
         transform: none;
         transition: none;
     }
+    .reveal-scan-line { display: none; }
+}
+
+/* ─── NOC Crosshair Cursor (UPGRADE 05) ─── */
+body.has-noc-cursor,
+body.has-noc-cursor * {
+    cursor: none !important;
+}
+
+.noc-cursor-root {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    z-index: 10000;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s var(--ease);
+    will-change: transform;
+}
+
+.noc-cursor-root.is-visible { opacity: 1; }
+
+.noc-cursor__ring,
+.noc-cursor__cross,
+.noc-cursor__dot {
+    position: absolute;
+    pointer-events: none;
+    top: 0;
+    left: 0;
+}
+
+.noc-cursor__ring {
+    width: 22px;
+    height: 22px;
+    margin: -11px 0 0 -11px;
+    border: 1px solid var(--cyan);
+    border-radius: 50%;
+    animation: noc-cursor-pulse 2s ease-in-out infinite;
+    transition: transform 0.18s var(--ease), border-color 0.18s var(--ease), box-shadow 0.18s var(--ease);
+}
+
+.noc-cursor__cross::before,
+.noc-cursor__cross::after {
+    content: '';
+    position: absolute;
+    background: var(--cyan);
+    top: 0;
+    left: 0;
+}
+
+.noc-cursor__cross::before {
+    width: 14px;
+    height: 1px;
+    margin: 0 0 0 -7px;
+}
+
+.noc-cursor__cross::after {
+    width: 1px;
+    height: 14px;
+    margin: -7px 0 0 0;
+}
+
+.noc-cursor__dot {
+    width: 3px;
+    height: 3px;
+    margin: -1.5px 0 0 -1.5px;
+    background: var(--cyan);
+    border-radius: 50%;
+    box-shadow: 0 0 6px var(--cyan);
+}
+
+.noc-cursor-root.is-over-interactive .noc-cursor__ring {
+    transform: scale(1.45);
+    border-color: var(--green);
+    box-shadow: 0 0 10px var(--green);
+}
+
+@keyframes noc-cursor-pulse {
+    0%, 100% { transform: scale(1); opacity: 0.85; }
+    50%      { transform: scale(1.35); opacity: 0.35; }
+}
+
+.noc-cursor__trail {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 4px;
+    margin: -2px 0 0 -2px;
+    background: var(--cyan);
+    border-radius: 50%;
+    pointer-events: none;
+    transition: opacity 0.4s var(--ease);
+    will-change: transform;
+    z-index: 9999;
+}
+
+.noc-cursor__ripple {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    border: 1.5px solid var(--cyan);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 9998;
+    animation: noc-cursor-ripple 0.6s ease-out forwards;
+}
+
+@keyframes noc-cursor-ripple {
+    0%   { width: 0;    height: 0;    opacity: 0.8; }
+    100% { width: 50px; height: 50px; opacity: 0;   }
+}
+
+/* No NOC cursor in executive / printable mode */
+body.mode-executive.has-noc-cursor,
+body.mode-executive.has-noc-cursor * {
+    cursor: auto !important;
+}
+body.mode-executive .noc-cursor-root,
+body.mode-executive .noc-cursor__trail,
+body.mode-executive .noc-cursor__ripple {
+    display: none !important;
 }
 
 /* ─── Executive Mode Overrides (Light Theme) ─── */

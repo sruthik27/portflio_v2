@@ -1,20 +1,31 @@
 <script>
   import { reveal } from '$lib/actions/scroll.js';
   import { onMount } from 'svelte';
+  import { slide } from 'svelte/transition';
 
   let currentDuration = $state('calculating...');
+  let expandedIds = $state(new Set());
+
+  function toggleExpanded(id) {
+    if (expandedIds.has(id)) {
+      expandedIds.delete(id);
+    } else {
+      expandedIds.add(id);
+    }
+    expandedIds = new Set(expandedIds);
+  }
 
   onMount(() => {
     const startDate = new Date('2024-09-01T00:00:00');
-    
+
     function calculateDuration() {
       const now = new Date();
       let months = (now.getFullYear() - startDate.getFullYear()) * 12 + now.getMonth() - startDate.getMonth();
       if (now.getDate() < startDate.getDate()) months--;
-      
+
       const years = Math.floor(months / 12);
       const remMonths = months % 12;
-      
+
       if (years > 0) {
         currentDuration = `${years}y ${remMonths}m ongoing`;
       } else {
@@ -23,28 +34,34 @@
     }
 
     calculateDuration();
-    const interval = setInterval(calculateDuration, 60000); // Check every minute
+    const interval = setInterval(calculateDuration, 60000);
     return () => clearInterval(interval);
   });
 
+  // Action bullets — NOC-style headlines.
   const experiences = [
     {
       id: "CHANGE-0002",
       env: "PRODUCTION",
       state: "ACTIVE — ONGOING",
       company: "HEWLETT PACKARD ENTERPRISE",
-      role: "Cloud Engineer — Aruba Networks",
-      node: "Chennai, Tamil Nadu, India",
+      role: "Cloud Engineer · HPE Networking",
+      node: "Chennai, Tamil Nadu, India · On-site",
       started: "Sep 2024",
       finished: "present",
       duration: () => currentDuration,
       status: "LIVE",
       actions: [
-        "Developing cloud solutions with Aruba Networks within HPE",
-        "Building and maintaining cloud infrastructure at scale",
-        "Applying AWS, networking, and containerization in production"
+        "Owning end-to-end production features across the troubleshooting-tools surface — driving each from design through rollout.",
+        "Re-architected a core diagnostics tool — rebuilt the service end-to-end and shipped a live, in-browser interactive console experience.",
+        "Solo-built a major catalog + execution feature — handled cross-version structuring, batch execution, and a fault-tolerant scheduler with persisted state.",
+        "Designed an aggregated API layer that unifies many internal endpoints into one consistent, typed surface with auth, schema validation, and structured parsing.",
+        "Owned a packet-level capture pipeline — neighbor-discovery for roaming scenarios, large-file artifact assembly, object-store upload, extended filter support.",
+        "Built a CPU-only hybrid retrieval engine over a structured command catalog — semantic + lexical retrieval with reranking. Search by intent, not memorised syntax.",
+        "Currently leading agentic AI tooling for network troubleshooting under a self-driving-networks initiative — automated root-cause analysis on live networks.",
+        "Cross-cutting platform work — RBAC, real-time UI infrastructure, and deploy configs spanning public-cloud and on-prem modes."
       ],
-      impact: "HIGH · Zero downtime maintained",
+      impact: "HIGH · Production features used daily by enterprise network admins",
       isActive: true,
       accent: "cyan"
     },
@@ -53,17 +70,18 @@
       env: "STAGING",
       state: "COMPLETED",
       company: "HEWLETT PACKARD ENTERPRISE",
-      role: "Cloud Developer Intern",
-      node: "Chennai, Tamil Nadu, India",
+      role: "Cloud Developer Intern · HPE Networking",
+      node: "Chennai, Tamil Nadu, India · On-site",
       started: "Feb 2024",
       finished: "Aug 2024",
       duration: () => "7 months",
       status: "ARCHIVED",
       actions: [
-        "Cloud development internship — foundation for full-time role",
-        "Contributed to cloud platform projects within HPE"
+        "Built the session-management infrastructure for the troubleshooting-tools app — persistence, relational lookups, search/filter, plus a probabilistic uniqueness check for session-name allocation at scale.",
+        "Shipped UI for the test-execution surface — interactive widgets for connectivity / latency / throughput tests, history tables, and live-update plumbing for real-time results.",
+        "Full-stack collaboration with multiple device teams and QA — validated troubleshooting workflows end-to-end across the device fleet."
       ],
-      impact: "MEDIUM — Successfully converted to full-time employment",
+      impact: "MEDIUM · Converted to full-time employment",
       isActive: false,
       accent: "text-dim"
     }
@@ -72,7 +90,7 @@
 
 <section id="experience" class="experience-section reveal-item fade-up" use:reveal>
   <header class="section-header">
-    <h2 class="section-id">§ 03 // CHANGE MANAGEMENT LOG</h2>
+    <h2 class="section-id">▸ 03 // CHANGE MANAGEMENT LOG</h2>
     <div class="header-line"></div>
   </header>
 
@@ -86,7 +104,7 @@
             <div class="timeline-dot {exp.isActive ? 'active-pulse' : ''}"></div>
           </div>
           
-          <div class="panel entry-panel {exp.isActive ? 'panel--cyan' : ''}">
+          <div class="panel panel--static entry-panel {exp.isActive ? 'panel--cyan' : ''}">
             <div class="entry-header">
               <span class="change-id text-muted">{exp.id}</span>
               <div class="tags">
@@ -116,14 +134,31 @@
               </div>
             </div>
 
-            <div class="actions-block">
-              <div class="meta-label">ACTIONS:</div>
-              <ul class="action-list">
-                {#each exp.actions as action}
-                  <li><span class="bullet text-cyan">▸</span> {action}</li>
-                {/each}
-              </ul>
-            </div>
+            <button
+              class="actions-toggle"
+              type="button"
+              onclick={() => toggleExpanded(exp.id)}
+              aria-expanded={expandedIds.has(exp.id)}
+              aria-controls="actions-{exp.id}"
+            >
+              <span class="actions-toggle__caret">{expandedIds.has(exp.id) ? '▾' : '▸'}</span>
+              <span class="actions-toggle__label">ACTIONS</span>
+              <span class="actions-toggle__count">[{exp.actions.length}]</span>
+              <span class="actions-toggle__hint">{expandedIds.has(exp.id) ? 'COLLAPSE' : 'EXPAND ↓'}</span>
+            </button>
+
+            {#if expandedIds.has(exp.id)}
+              <div id="actions-{exp.id}" class="actions-block" transition:slide={{ duration: 220 }}>
+                <ul class="action-list">
+                  {#each exp.actions as action}
+                    <li class="action-item">
+                      <span class="bullet text-cyan">▸</span>
+                      <span class="action-text">{action}</span>
+                    </li>
+                  {/each}
+                </ul>
+              </div>
+            {/if}
 
             <div class="impact-block">
               <span class="meta-label">IMPACT:</span> <span class="text-primary">{exp.impact}</span>
@@ -311,6 +346,48 @@
     margin-right: var(--space-2);
   }
 
+  .actions-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    align-self: flex-start;
+    background: var(--panel-inset);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    letter-spacing: 0.06em;
+    padding: var(--space-2) var(--space-3);
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.2s var(--ease);
+  }
+
+  .actions-toggle:hover {
+    border-color: var(--cyan-border);
+    color: var(--text-bright);
+    box-shadow: 0 0 8px var(--cyan-glow);
+  }
+
+  .actions-toggle__caret {
+    color: var(--cyan);
+    width: 12px;
+    text-align: center;
+    transition: color 0.2s ease;
+  }
+
+  .actions-toggle__count {
+    color: var(--cyan);
+    font-weight: 600;
+  }
+
+  .actions-toggle__hint {
+    color: var(--text-dim);
+    margin-left: var(--space-2);
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+  }
+
   .actions-block {
     display: flex;
     flex-direction: column;
@@ -323,15 +400,19 @@
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: var(--space-2);
+    gap: var(--space-3);
     color: var(--text-primary);
   }
 
-  .action-list li {
+  .action-item {
     display: flex;
     align-items: flex-start;
     gap: var(--space-2);
     line-height: 1.5;
+  }
+
+  .action-text {
+    flex: 1;
   }
 
   .bullet {

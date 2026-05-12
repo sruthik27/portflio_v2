@@ -3,7 +3,30 @@
     "allow": [
       "Bash(git init *)",
       "Bash(git add *)",
-      "Bash(git commit -m ' *)"
+      "Bash(git commit -m ' *)",
+      "Bash(git remote *)",
+      "Bash(git push *)",
+      "WebFetch(domain:api.anthropic.com)",
+      "Bash(curl *)",
+      "Read(//tmp/**)",
+      "Bash(xxd)",
+      "Bash(/usr/bin/curl -sS -w \"\\\\nHTTP:%{http_code}\\\\n\" \"https://api.anthropic.com/v1/design/h/gEdi5BAdFi60IcvaDzPrlA?open_file=NOC+Portfolio+Upgrade+Proposal.html\" -o /tmp/t.bin)",
+      "Bash(/usr/bin/file /tmp/t.bin)",
+      "Bash(/usr/bin/head -c 50 /tmp/t.bin)",
+      "Bash(env)",
+      "Bash(unzip -l \"design_enhancements/NOC Portfolio-handoff.zip\")",
+      "Bash(unzip -o \"NOC Portfolio-handoff.zip\" -d extracted/)",
+      "Bash(npm run *)",
+      "Bash(grep *)",
+      "Bash(unzip -o \"/Users/sruthiki/Projects/noc_portfolio/design_enhancements/NOC Portfolio-Transition-handoff.zip\" -d \"/Users/sruthiki/Projects/noc_portfolio/design_enhancements/extracted_transition\")",
+      "WebSearch",
+      "mcp__aws-api__call_aws",
+      "Bash(zip -q function.zip index.mjs)",
+      "Bash(cp function.zip /var/folders/_m/cd37sk2n7lv5_cjy__vxhwfm0000gn/T/aws-api-mcp/workdir/function.zip)",
+      "Read(//var/folders/_m/cd37sk2n7lv5_cjy__vxhwfm0000gn/T/aws-api-mcp/workdir/**)",
+      "Bash(vercel --version)",
+      "Bash(vercel whoami *)",
+      "Bash(vercel deploy *)"
     ]
   }
 }

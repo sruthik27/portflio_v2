@@ -23,15 +23,15 @@ test.describe('Core app shell', () => {
     await expect(page.getByRole('heading', { name: 'SRUTHIK ISSAC' })).toBeVisible();
     await expect(page.getByText('PROUD CLOUD & NETWORK ENGINEER')).toBeVisible();
     await expect(page.locator('.hero__stats')).toContainText('EXPERIENCE');
-    await expect(page.locator('.hero__stats')).toContainText('34 ACTIVE');
-    await expect(page.locator('.hero__stats')).toContainText('9 SYSTEMS');
+    await expect(page.locator('.hero__stats')).toContainText('33 ACTIVE');
+    await expect(page.locator('.hero__stats')).toContainText('15 SYSTEMS');
     await expect(page.getByText('wake me up for a tour')).toBeVisible();
   });
 
   test('switches to the about view and exposes profile links', async ({ page }) => {
     await page.getByRole('button', { name: 'ABOUT' }).click();
 
-    await expect(page.locator('#about .section-tag').first()).toBeVisible();
+    await expect(page.locator('#about .section-id').first()).toBeVisible();
     await expect(page.getByText('root@career_os:~$ systeminfo').first()).toBeVisible();
     await expect(page.getByText('Sruthik Issac').first()).toBeVisible();
 
@@ -42,14 +42,14 @@ test.describe('Core app shell', () => {
 
   test('switches to projects and contact views with working outbound links', async ({ page }) => {
     await page.getByRole('button', { name: 'PROJECTS' }).click();
-    await expect(page.getByRole('heading', { name: '§ 04 // DEPLOYMENT REGISTRY' }).first()).toBeVisible();
+    await expect(page.getByRole('heading', { name: '▸ 04 // DEPLOYMENT REGISTRY' }).first()).toBeVisible();
     await expect(page.getByText('SyncRoom').first()).toBeVisible();
 
     const sourceLink = page.getByRole('link', { name: /SOURCE/i }).first();
     await expect(sourceLink).toHaveAttribute('href', /github\.com/);
 
     await page.getByRole('button', { name: 'CONTACT' }).click();
-    await expect(page.getByRole('heading', { name: '§ 08 // ESTABLISH CONNECTION' }).first()).toBeVisible();
+    await expect(page.getByRole('heading', { name: '▸ 07 // ESTABLISH CONNECTION' }).first()).toBeVisible();
     await expect(page.getByText('PRIMARY EMAIL').first()).toBeVisible();
 
     const emailLink = page.getByRole('link', { name: /\[→ CONNECT\]/i }).first();

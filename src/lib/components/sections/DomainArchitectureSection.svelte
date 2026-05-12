@@ -6,50 +6,51 @@
 
   // 4-Node Domain Topology
   const nodes = [
-    { 
-      id: 'cloud', 
-      label: 'CLOUD_INFRASTRUCTURE', 
-      x: 450, 
-      y: 80, 
+    {
+      id: 'cloud',
+      label: 'CLOUD_INFRASTRUCTURE',
+      x: 450,
+      y: 80,
       color: 'var(--cyan)',
       icon: '<path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z" />',
       telemetry: {
         domain: 'CLOUD & DISTRIBUTED SYSTEMS',
         status: 'EXPERT · CERTIFIED',
-        stack: 'AWS SAA, Kubernetes, Serverless',
-        focus: 'Highly available, scalable production architectures.',
-        activeSkills: ['AWS (VPC, EC2, S3, RDS)', 'Docker & Kubernetes', 'Serverless Framework', 'CI/CD Pipelines']
+        stack: 'AWS SAA, Kubernetes, S3, Solution Architecture',
+        focus: 'Highly available, scalable production architectures across AWS, Azure, and on-prem.',
+        activeSkills: ['AWS (S3, Lambda, EC2, VPC)', 'Kubernetes (+ HPE Ezmeral)', 'Multi-cloud Deploys (AWS/Azure/COP)', 'Solution Architecture']
       },
       skills: [
-        { name: '● AWS (Solutions Architect SAA)', strength: 4, tooltip: 'Expert · Certified' },
-        { name: '● HPE Aruba Cloud Platform', strength: 4, tooltip: 'Expert · Current Daily Work' },
-        { name: '● Kubernetes (+ HPE Ezmeral)', strength: 4, tooltip: 'Expert · HPE Certified' },
-        { name: '◉ Microsoft Azure (AZ-900)', strength: 3, tooltip: 'Proficient · Certified' },
-        { name: '◉ Serverless Architecture', strength: 3, tooltip: 'Proficient · AWS Lambda' },
-        { name: '◉ Solution Architecture & Design', strength: 3, tooltip: 'Proficient · Scalability Focus' }
+        { name: '● AWS (Solutions Architect SAA)', strength: 4, tooltip: 'Expert · Certified Oct 2024' },
+        { name: '● HPE Networking Platform', strength: 4, tooltip: 'Expert · Daily production work' },
+        { name: '● Kubernetes (+ HPE Ezmeral)', strength: 4, tooltip: 'Expert · HPE Certified · Multi-cloud deploys' },
+        { name: '● Solution Architecture & Design', strength: 4, tooltip: 'Expert · AWS SAA' },
+        { name: '◉ Docker & Containers', strength: 3, tooltip: 'Proficient · Containerlab labs + production' },
+        { name: '◉ Microsoft Azure (AZ-900)', strength: 3, tooltip: 'Proficient · Certified' }
       ]
     },
-    { 
-      id: 'network', 
-      label: 'ENTERPRISE_NETWORKING', 
-      x: 200, 
-      y: 260, 
+    {
+      id: 'network',
+      label: 'ENTERPRISE_NETWORKING',
+      x: 200,
+      y: 260,
       color: 'var(--green)',
       icon: '<rect x="16" y="16" width="6" height="6" rx="1" /><rect x="2" y="16" width="6" height="6" rx="1" /><rect x="9" y="2" width="6" height="6" rx="1" /><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3" /><path d="M12 12V8" />',
       telemetry: {
         domain: 'CORE NETWORKING & SECURITY',
-        status: 'EXPERT · DAILY WORK',
-        stack: 'HPE Aruba, CCNA, Packet Analysis',
-        focus: 'Enterprise-grade routing, switching, and secure edges.',
-        activeSkills: ['HPE Aruba Architecture', 'Enterprise Route/Switch', 'Edge Security', 'Packet Analysis']
+        status: 'EXPERT · DAILY PRODUCTION',
+        stack: 'Aruba Central, CCNA, WiFi, Packet Capture, Cisco IOL',
+        focus: 'Enterprise routing/switching, AP/wireless, packet-level diagnostics, and secure edges.',
+        activeSkills: ['Aruba Central Troubleshooting-Tools', 'Live Packet Capture (CX)', 'WiFi / Roaming Diagnostics', 'Containerlab Networking Labs (Etherlab)']
       },
       skills: [
-        { name: '● Computer Networking (CCNA)', strength: 4, tooltip: 'Expert · Cisco Certified' },
-        { name: '● Cybersecurity Operations', strength: 4, tooltip: 'Expert · Cisco Certified' },
+        { name: '● Computer Networking (CCNA)', strength: 4, tooltip: 'Expert · Cisco Certified · Renewed Jan 2026' },
+        { name: '● WiFi / Wireless', strength: 4, tooltip: 'Expert · Plexus + Aruba Central' },
+        { name: '● Cybersecurity (Cisco)', strength: 4, tooltip: 'Expert · Cisco Certified' },
         { name: '● Ethical Hacking', strength: 4, tooltip: 'Expert · Cisco Certified' },
-        { name: '◉ AI for Networking', strength: 3, tooltip: 'Proficient · Cisco Certified' },
-        { name: '◉ Network Devices Admin', strength: 3, tooltip: 'Proficient · Daily Administration' },
-        { name: '◉ Wireshark & Packet Details', strength: 3, tooltip: 'Proficient · Troubleshooting' }
+        { name: '◉ AI for Networking (Cisco)', strength: 3, tooltip: 'Proficient · Cisco Certified Jul 2025' },
+        { name: '◉ Network Devices & Configuration', strength: 3, tooltip: 'Proficient · Daily admin · Cisco Certified' },
+        { name: '◉ Packet Analysis (Wireshark)', strength: 3, tooltip: 'Proficient · Live Packet Capture work' }
       ]
     },
     { 
@@ -61,17 +62,18 @@
       icon: '<path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z" /><path d="M9 13a4.5 4.5 0 0 0 3-4" /><path d="M6.003 5.125A3 3 0 0 0 6.401 6.5" /><path d="M3.477 10.896a4 4 0 0 1 .585-.396" /><path d="M6 18a4 4 0 0 1-1.967-.516" /><path d="M12 13h4" /><path d="M12 18h6a2 2 0 0 1 2 2v1" /><path d="M12 8h8" /><path d="M16 8V5a2 2 0 0 1 2-2" /><circle cx="16" cy="13" r=".5" /><circle cx="18" cy="3" r=".5" /><circle cx="20" cy="21" r=".5" /><circle cx="20" cy="8" r=".5" />',
       telemetry: {
         domain: 'AI & AUTONOMOUS AGENTS',
-        status: 'MASTERING · ACTIVE RESEARCH',
-        stack: 'LangChain, OpenAI, LLM Ops',
-        focus: 'Building intelligent agents for infrastructure automation.',
-        activeSkills: ['LangChain Workflows', 'Prompt Engineering', 'RAG pipelines', 'Vector DBs']
+        status: 'EXPERT · ACTIVE RESEARCH',
+        stack: 'LangChain, LangGraph, MCP, RAG, Hybrid Graph Retrieval',
+        focus: 'Building agentic AI for self-driving networks and citation-first knowledge tools.',
+        activeSkills: ['LangGraph Agents (HPE Self-Driving Networks)', 'Hybrid Graph RAG (Plexus · Qdrant + Neo4j)', 'MCP Servers · LangChain', 'Local-LLM Pipelines (Marginalia · Ollama)']
       },
       skills: [
-        { name: '● LangChain / AI Agents', strength: 4, tooltip: 'Expert · LangChain Academy' },
-        { name: '● AWS AI Practitioner', strength: 4, tooltip: 'Expert · AWS Certified' },
-        { name: '◉ Anthropic & OpenAI APIs', strength: 3, tooltip: 'Proficient · Frequent Implementations' },
-        { name: '◉ RAG Architecture', strength: 3, tooltip: 'Proficient · Semantic Data Retrieval' },
-        { name: '◉ Prompt Engineering', strength: 3, tooltip: 'Proficient · Context Optimization' }
+        { name: '● LangChain / LangGraph / Agents', strength: 4, tooltip: 'Expert · LangChain Essentials Certified' },
+        { name: '● RAG · Vector Search', strength: 4, tooltip: 'Expert · Plexus, Marginalia, show-command catalog' },
+        { name: '● Generative AI (AWS AI Practitioner)', strength: 4, tooltip: 'Expert · AWS Certified · MongoDB GenAI Apps' },
+        { name: '◉ MCP (Model Context Protocol)', strength: 3, tooltip: 'Proficient · HPE agentic AI tooling' },
+        { name: '◉ Prompt Engineering', strength: 3, tooltip: 'Proficient · Context optimization across projects' },
+        { name: '◉ Local LLMs (Ollama)', strength: 3, tooltip: 'Proficient · Marginalia, n8n Email Summariser' }
       ]
     },
     { 
@@ -83,18 +85,19 @@
       icon: '<polyline points="16 18 22 12 16 6" /><polyline points="8 6 2 12 8 18" />',
       telemetry: {
         domain: 'CORE PROGRAMMING & FULL STACK',
-        status: 'PROFICIENT · PRODUCTION CODE',
-        stack: 'JS/TS, Python, Svelte, Go',
-        focus: 'Writing robust backend services and interactive frontends.',
-        activeSkills: ['Python scripting', 'JS/TS Web Apps', 'Database Architecture', 'API Design']
+        status: 'EXPERT · PRODUCTION CODE',
+        stack: 'Go, Quarkus, React, FastAPI, Kafka, Temporal, ArangoDB',
+        focus: 'Robust event-driven backends and interactive frontends — Aruba Central, Plexus, Marginalia.',
+        activeSkills: ['Go services (Remote Console · Commands · NBAPI)', 'React + TypeScript Frontends', 'Event-driven (Kafka · Temporal · Redis)', 'ArangoDB · MongoDB · PostgreSQL · DuckDB']
       },
       skills: [
-        { name: '● Python', strength: 4, tooltip: 'Expert · HackerRank Certified' },
-        { name: '● JavaScript / TypeScript', strength: 4, tooltip: 'Expert · Full-Stack Daily Use' },
-        { name: '◉ SQL / NoSQL Databases', strength: 3, tooltip: 'Proficient · ZTM + HackerRank' },
-        { name: '◉ Go (Golang)', strength: 3, tooltip: 'Proficient · HackerRank Certified' },
-        { name: '◉ Java (Concurrent + Parallel)', strength: 3, tooltip: 'Proficient · Udemy Certified' },
-        { name: '◉ React.js / Svelte / Node.js', strength: 3, tooltip: 'Proficient · Frontend & Backend' }
+        { name: '● Go (Golang)', strength: 4, tooltip: 'Expert · Daily production · HackerRank Certified' },
+        { name: '● Python', strength: 4, tooltip: 'Expert · HackerRank Certified · FastAPI, RAG' },
+        { name: '● JavaScript / TypeScript', strength: 4, tooltip: 'Expert · React, Node, Electron · TS Certified' },
+        { name: '● Quarkus · React · FastAPI', strength: 4, tooltip: 'Expert · Daily HPE production stack' },
+        { name: '◉ Event-driven (Kafka · Temporal · Redis · SSE · WebSocket)', strength: 3, tooltip: 'Proficient · Redis Streams + Java Certified' },
+        { name: '◉ ArangoDB · MongoDB · PostgreSQL · DuckDB', strength: 3, tooltip: 'Proficient · ArangoDB + MongoDB + ClickHouse Certified' },
+        { name: '◉ Java (Concurrent + Parallel)', strength: 3, tooltip: 'Proficient · Udemy Certified' }
       ]
     }
   ];
@@ -195,13 +198,13 @@
   }
 </script>
 
-<section id="infra" class="domain-section reveal-item fade-up" use:reveal>
+<section id="domains" class="domain-section reveal-item fade-up" use:reveal>
   <header class="section-header">
-    <h2 class="section-id">§ 02 // DOMAIN TOPOLOGY & SKILLS</h2>
+    <h2 class="section-id">▸ 02 // DOMAIN TOPOLOGY & SKILLS</h2>
     <div class="header-line"></div>
   </header>
 
-  <div class="topology-stage panel" class:domain-active={activeDomainId !== null}>
+  <div class="topology-stage panel panel--static" class:domain-active={activeDomainId !== null}>
     <!-- Topology Graph -->
     <div class="graph-layer">
       <div class="svg-container">
@@ -389,7 +392,14 @@
               onmouseleave={() => handleSkillLeave(skillId)}
             >
               <div class="skill-name">{skill.name}</div>
-              
+
+              {#if activeTooltipId === skillId}
+                 <div class="custom-tooltip fade-up-fast" style="border-color: {activeDomain.color}">
+                   <span class="tooltip-badge" style="background: {activeDomain.color}">INSPECT</span>
+                   {skill.tooltip}
+                 </div>
+              {/if}
+
               <div class="skill-bottom">
                 <div class="signal-gauge">
                   <div class="data-label">LINK_QUALITY</div>
@@ -399,18 +409,11 @@
                     {/each}
                   </div>
                 </div>
-                
+
                 <div class="skill-type" style="color: var(--text-muted)">
                    {skill.strength === 4 ? '[EXPERT]' : skill.strength === 3 ? '[PROFICIENT]' : '[FAMILIAR]'}
                 </div>
               </div>
-
-              {#if activeTooltipId === skillId}
-                 <div class="custom-tooltip fade-up-fast" style="border-color: {activeDomain.color}">
-                   <span class="tooltip-badge" style="background: {activeDomain.color}">INSPECT</span>
-                   {skill.tooltip}
-                 </div>
-              {/if}
             </div>
           {/each}
         </div>
@@ -569,6 +572,7 @@
 
   .telemetry-panel {
     width: 320px;
+    max-width: 100%;
     background: rgba(10, 10, 12, 0.9);
     backdrop-filter: blur(8px);
     border: 1px solid var(--border-active);
@@ -806,24 +810,21 @@
     transition: background 0.3s, box-shadow 0.3s;
   }
 
+  /* Inline within the card — avoids escaping the .skills-grid (overflow-y: auto)
+     parent which previously caused a truncated overlay artifact above adjacent cards. */
   .custom-tooltip {
-    position: absolute;
-    top: -30px;
-    right: 0;
     background: var(--panel-raised);
     padding: var(--space-2) var(--space-3);
     font-family: var(--font-mono);
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     color: var(--text-primary);
     border: 1px solid currentColor;
     border-radius: 2px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-    z-index: 10;
-    white-space: nowrap;
     display: flex;
     align-items: center;
     gap: var(--space-2);
     pointer-events: none;
+    line-height: 1.4;
   }
 
   .tooltip-badge {
@@ -853,6 +854,11 @@
       position: static;
       justify-content: center;
       margin-top: var(--space-4);
+      width: 100%;
+    }
+    .telemetry-panel {
+      width: 100%;
+      max-width: 320px;
     }
     .topology-stage.domain-active {
       min-height: 900px;

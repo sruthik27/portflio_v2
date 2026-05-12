@@ -89,8 +89,8 @@
 
   const stats = [
     { label: 'EXPERIENCE', value: '2+ YEARS' },
-    { label: 'CERTIFICATIONS', value: '34 ACTIVE' },
-    { label: 'PROJECTS SHIPPED', value: '9 SYSTEMS' },
+    { label: 'CERTIFICATIONS', value: '33 ACTIVE' },
+    { label: 'PROJECTS SHIPPED', value: '15 SYSTEMS' },
     { label: 'COFFEE CONSUMED', value: '9,001 ☕️' },
   ];
 </script>
@@ -103,10 +103,10 @@
         PROUD CLOUD & NETWORK ENGINEER
       </div>
 
-      <h1 class="hero__name" bind:this={nameEl} aria-label={FINAL_NAME}>SRUTHIK ISSAC</h1>
+      <h1 class="hero__name" bind:this={nameEl} data-text={FINAL_NAME} aria-label={FINAL_NAME}>SRUTHIK ISSAC</h1>
 
       <div class="hero__role">
-        CLOUD ENGINEER @ HEWLETT PACKARD ENTERPRISE · AWS SAA · CCNA
+        CLOUD & NETWORK ENGINEER @ HPE NETWORKING · AWS SAA · CCNA
       </div>
 
       <div class="hero__badges">
@@ -134,9 +134,9 @@
 
       <!-- Sleeping Bot Tour Trigger -->
       {#if !tourActive.value}
-      <button 
-        class="hero__sleeping-bot" 
-        onclick={() => { stopThruster(); tourActive.value = true; }} 
+      <button
+        class="hero__sleeping-bot"
+        onclick={() => { stopThruster(); tourActive.value = true; }}
         onmouseenter={startThruster}
         onmouseleave={stopThruster}
         aria-label="Start Guided Tour"
@@ -238,6 +238,64 @@
     line-height: 1.1;
     letter-spacing: 0.04em;
     margin-bottom: var(--space-3);
+    position: relative;
+    display: inline-block;
+    cursor: default;
+  }
+
+  /* ── Chromatic aberration layers (UPGRADE 01) ── */
+  /* The ghost channels read from the static `data-text` attribute, so they
+     stay correct even while nameEl.innerText is being scrambled during the
+     decode. They only paint on :hover, so there's no visual cost pre-decode. */
+  .hero__name::before,
+  .hero__name::after {
+    content: attr(data-text);
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    mix-blend-mode: screen;
+    opacity: 0;
+    transition: opacity 0.12s var(--ease);
+    font: inherit;
+    letter-spacing: inherit;
+    line-height: inherit;
+    white-space: pre;
+  }
+  .hero__name::before { color: #ff3366; }
+  .hero__name::after  { color: #00d4ff; }
+
+  .hero__name:hover::before {
+    opacity: 1;
+    animation: chroma-r 0.6s steps(1) infinite;
+  }
+  .hero__name:hover::after {
+    opacity: 1;
+    animation: chroma-b 0.6s steps(1) infinite 0.03s;
+  }
+
+  @keyframes chroma-r {
+    0%   { clip-path: polygon(0 15%, 100% 15%, 100% 30%, 0 30%); transform: translate(-4px); }
+    15%  { clip-path: polygon(0 60%, 100% 60%, 100% 75%, 0 75%); transform: translate(3px); }
+    30%  { clip-path: polygon(0 40%, 100% 40%, 100% 55%, 0 55%); transform: translate(-3px); }
+    50%  { clip-path: polygon(0 80%, 100% 80%, 100% 95%, 0 95%); transform: translate(4px); }
+    70%  { clip-path: polygon(0 5%,  100% 5%,  100% 20%, 0 20%); transform: translate(-2px); }
+    100% { clip-path: polygon(0 15%, 100% 15%, 100% 30%, 0 30%); transform: translate(-4px); }
+  }
+  @keyframes chroma-b {
+    0%   { clip-path: polygon(0 70%, 100% 70%, 100% 85%, 0 85%);  transform: translate(4px); }
+    20%  { clip-path: polygon(0 20%, 100% 20%, 100% 40%, 0 40%);  transform: translate(-3px); }
+    45%  { clip-path: polygon(0 50%, 100% 50%, 100% 65%, 0 65%);  transform: translate(3px); }
+    65%  { clip-path: polygon(0 5%,  100% 5%,  100% 18%, 0 18%);  transform: translate(-4px); }
+    85%  { clip-path: polygon(0 85%, 100% 85%, 100% 100%, 0 100%);transform: translate(2px); }
+    100% { clip-path: polygon(0 70%, 100% 70%, 100% 85%, 0 85%);  transform: translate(4px); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero__name:hover::before,
+    .hero__name:hover::after {
+      animation: none;
+      opacity: 0;
+    }
   }
 
   .hero__role {

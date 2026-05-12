@@ -5,8 +5,9 @@
     {
       id: "MOD-01",
       module: "Thiagarajar College of Engineering",
-      version: "v4.0 (B.E. Computer Science)",
+      version: "v4.0 (B.E. Electronics & Communications Engineering)",
       duration: "Nov 2020 – Jun 2024",
+      grade: "CGPA 9.0 / 10",
       status: "VERIFIED",
       location: "Madurai, TN",
       accent: "cyan"
@@ -14,8 +15,9 @@
     {
       id: "MOD-00",
       module: "Rotary Laharry Matriculation HSS",
-      version: "v1.2 (Higher Secondary)",
-      duration: "Jun 2004 – Mar 2019",
+      version: "v1.2 (Higher Secondary · HSC)",
+      duration: "Jun 2017 – Mar 2019",
+      grade: null,
       status: "ARCHIVED",
       location: "Madurai, TN",
       accent: "border-subtle"
@@ -25,7 +27,7 @@
 
 <section id="education" class="education-section reveal-item fade-up" use:reveal>
   <header class="section-header">
-    <h2 class="section-id">§ 06 // FIRMWARE & TRAINING MODULES</h2>
+    <h2 class="section-id">▸ 06 // FIRMWARE & TRAINING MODULES</h2>
     <div class="header-line"></div>
   </header>
 
@@ -54,6 +56,12 @@
             <span class="fw-key">SECTOR_NODE:</span>
             <span class="fw-val text-secondary">{edu.location}</span>
           </div>
+          {#if edu.grade}
+          <div class="fw-row">
+            <span class="fw-key">CHECKSUM:</span>
+            <span class="fw-val text-green">{edu.grade}</span>
+          </div>
+          {/if}
           <div class="fw-row">
             <span class="fw-key">INTEGRITY_CHK:</span>
             <span class="fw-val {edu.status === 'VERIFIED' ? 'text-green' : 'text-muted'}">
@@ -172,10 +180,19 @@
     .modules-grid {
       grid-template-columns: 1fr;
     }
-    
+
     .fw-row {
       grid-template-columns: 1fr;
       gap: var(--space-1);
+    }
+
+    /* On mobile, let values wrap fully — readability beats terminal-line aesthetic
+       when the column is too narrow to fit a degree name. */
+    .fw-val {
+      white-space: normal;
+      overflow: visible;
+      text-overflow: clip;
+      overflow-wrap: anywhere;
     }
   }
 </style>

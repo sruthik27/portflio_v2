@@ -32,13 +32,13 @@ test.describe('Interactions and production safeguards', () => {
     await page.goto('/');
 
     await page.getByRole('button', { name: 'ABOUT' }).click();
-    await expect(page.locator('#about .section-tag').first()).toBeVisible();
+    await expect(page.locator('#about .section-id').first()).toBeVisible();
 
     await page.getByRole('button', { name: 'PROJECTS' }).click();
-    await expect(page.getByRole('heading', { name: '§ 04 // DEPLOYMENT REGISTRY' }).first()).toBeVisible();
+    await expect(page.getByRole('heading', { name: '▸ 04 // DEPLOYMENT REGISTRY' }).first()).toBeVisible();
 
     await page.getByRole('button', { name: 'CONTACT' }).click();
-    await expect(page.getByRole('heading', { name: '§ 08 // ESTABLISH CONNECTION' }).first()).toBeVisible();
+    await expect(page.getByRole('heading', { name: '▸ 07 // ESTABLISH CONNECTION' }).first()).toBeVisible();
 
     expect(pageErrors).toEqual([]);
     expect(consoleErrors).toEqual([]);
@@ -57,7 +57,7 @@ test.describe('Interactions and production safeguards', () => {
     await input.fill('contact');
     await page.keyboard.press('Enter');
 
-    await expect(page.getByRole('heading', { name: '§ 08 // ESTABLISH CONNECTION' }).first()).toBeVisible();
+    await expect(page.getByRole('heading', { name: '▸ 07 // ESTABLISH CONNECTION' }).first()).toBeVisible();
   });
 });
 
@@ -72,9 +72,9 @@ test.describe('Mobile navigation', () => {
     await expect(mobileNav).toBeVisible();
 
     await mobileNav.getByRole('button', { name: /WORK/i }).click();
-    await expect(page.getByRole('heading', { name: '§ 04 // DEPLOYMENT REGISTRY' }).first()).toBeVisible();
+    await expect(page.getByRole('heading', { name: '▸ 04 // DEPLOYMENT REGISTRY' }).first()).toBeVisible();
 
     await mobileNav.getByRole('button', { name: /CONTACT/i }).click();
-    await expect(page.getByRole('heading', { name: '§ 08 // ESTABLISH CONNECTION' }).first()).toBeVisible();
+    await expect(page.getByRole('heading', { name: '▸ 07 // ESTABLISH CONNECTION' }).first()).toBeVisible();
   });
 });

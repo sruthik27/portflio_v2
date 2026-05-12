@@ -10,7 +10,7 @@
     </div>
     <div class="footer-col">
       <div class="footer-label">LAST_UPDATE</div>
-      <div class="footer-value">05-APR-2026</div>
+      <div class="footer-value">11-MAY-2026</div>
     </div>
     <div class="footer-col">
       <div class="footer-label">COPYRIGHT</div>
