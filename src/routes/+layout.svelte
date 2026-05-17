@@ -138,6 +138,13 @@
   @media (max-width: 768px) {
     .layout-wrapper {
       padding-left: 0;
+      /* Leave room at the bottom for the fixed mobile nav so the footer and
+         last bit of content aren't hidden underneath it. ~72px nav + safe-area. */
+      padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+    }
+    .layout-wrapper--standalone {
+      /* Standalone routes (resume) don't render the mobile nav. */
+      padding-bottom: 0;
     }
     .main-content {
       padding: 0 24px;

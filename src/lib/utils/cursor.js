@@ -63,6 +63,12 @@ export function initNocCursor() {
   function onMove(e) {
     mx = e.clientX;
     my = e.clientY;
+    // If the cursor was already inside the viewport on page load, the document
+    // mouseenter event never fires — only mousemove does. Promote to visible
+    // here so the reticle replaces the trail-dots-only state seen after refresh.
+    if (!root.classList.contains('is-visible')) {
+      root.classList.add('is-visible');
+    }
     if (rafId == null) rafId = requestAnimationFrame(tick);
   }
 
